@@ -15,7 +15,7 @@ dependencies:
       set -e
       for NV in $NODEJS_VERSIONS
       do
-        docker build --build-arg setup=setup_$NV esv=es5 -t $NV .
+        docker build --build-arg setup=setup_$NV --build-arg esv=es5 -t $NV .
       done
 test:
   override:
