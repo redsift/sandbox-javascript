@@ -13,19 +13,30 @@ dependencies:
     - docker info
     - |
       set -e
-      for VERSION in $NODEJS_VERSIONS
+      for NV in $NODEJS_VERSIONS
       do
-        docker build --build-arg setup=setup_$VERSION -t $VERSION .
+        docker build --build-arg setup=setup_$NV -t $NV .
       done
-
+test:
+  override:
+    - |
+      set -e
+      for NV in $NODEJS_VERSIONS
+      do
+        docker run -v $PWD/test:/run/dagger/sift -e TEST=true $NV 0 2
+      done
+  
 deployment:
   production:
     branch: master  
     commands:
       - docker login -e $QUAY_EMAIL -u $QUAY_USER -p $QUAY_PASS quay.io
       - | 
-        VERSION=$(docker run 4.x --version)
-        echo "Tagging as $CONTAINER_NAME:$VERSION"
-        docker tag 4.x:latest $CONTAINER_NAME:$VERSION
-        docker push $CONTAINER_NAME 
-        
+        set -e
+        for NV in $NODEJS_VERSIONS
+        do
+          VERSION=$(docker run $NV --version)
+          echo "Tagging as $CONTAINER_NAME:$VERSION"
+          docker tag $NV:latest $CONTAINER_NAME:$VERSION
+          docker push $CONTAINER_NAME 
+        done      

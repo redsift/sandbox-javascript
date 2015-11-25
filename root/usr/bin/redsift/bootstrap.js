@@ -6,8 +6,7 @@
 // Provides bootstrapping for the to be launched nodes
 const Nano = require('nanomsg');
 const FS = require('fs');
-const SIFT_ROOT = '/run/dagger/sift/';
-const IPC_ROOT = '/run/dagger/ipc/';
+const path = require('path');
 
 function flattenNestedArrays(value) {
 	if (Array.isArray(value)) {
@@ -55,9 +54,27 @@ if (process.argv.length < 3) {
     throw new Error('No nodes to execute');
 }
 
-let nodes = process.argv.slice(2);
+// -------- Main
 
-const sift = JSON.parse(FS.readFileSync(SIFT_ROOT+'sift.json', 'utf8'));
+const SIFT_ROOT = process.env.SIFT_ROOT;
+const IPC_ROOT = process.env.IPC_ROOT;
+const TEST = (process.env.TEST === 'true');
+
+if (!SIFT_ROOT) {
+	throw new Error('Environment SIFT_ROOT not set');
+}
+
+if (!IPC_ROOT) {
+	throw new Error('Environment IPC_ROOT not set');
+}
+
+if (TEST) {
+	console.log('Unit Test Mode');
+}
+
+const nodes = process.argv.slice(2);
+
+const sift = JSON.parse(FS.readFileSync(path.join(SIFT_ROOT, 'sift.json'), 'utf8'));
 
 if ((sift.dag === undefined) || (sift.dag.nodes === undefined)) {
 	throw new Error('Sift does not contain any nodes');
@@ -72,9 +89,12 @@ nodes.forEach(function (i) {
 	}
 	
 	one = true;
-	const node = require(SIFT_ROOT + n.implementation.javascript);
+	const node = require(path.join(SIFT_ROOT, n.implementation.javascript));
+	if (TEST) {
+		return;
+	}
 	const reply = Nano.socket('rep');
-	reply.connect('ipc://' + IPC_ROOT + i + '.sock');
+	reply.connect('ipc://' + path.join(IPC_ROOT, i + '.sock'));
 	reply.on('data', function (msg) {
 		let req = fromEncodedMessage(JSON.parse(msg));
 		// console.log('REQ:', req);

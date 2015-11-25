@@ -5,6 +5,8 @@ MAINTAINER Rahul Powar email: rahul@redsift.io version: 1.1.101
 ARG setup
 ENV SETUP_URL https://deb.nodesource.com/${setup:-setup_4.x}
 
+ENV SIFT_ROOT="/run/dagger/sift" IPC_ROOT="/run/dagger/ipc"
+
 # Fix for ubuntu to ensure /etc/default/locale is present
 RUN update-locale
 
@@ -26,8 +28,7 @@ COPY root /
 RUN cd /usr/bin/redsift && npm install
 
 VOLUME /run/dagger/sift
+
 WORKDIR /run/dagger/sift
 
-ENTRYPOINT [ "/usr/bin/nodejs" ]
-
-CMD [ "/usr/bin/redsift/boostrap.js" ]
+ENTRYPOINT [ "/usr/bin/nodejs", "/usr/bin/redsift/boostrap.js" ]
