@@ -1,14 +1,13 @@
 {
   "name": "redsift-bootstrap",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Sets up the sandbox for NodeJS backend tasks",
   "scripts": {
     "lint": "jshint --config .jshinrc bootstrap.js",
     "es5": "./node_modules/.bin/babel bootstrap.js -o bootstrap-es5.js -b es6.constants"
   },
   "dependencies": {
-    "nanomsg": "~2.1.1",
-    "vm2": "https://github.com/Redsift/vm2"
+    "nanomsg": "^3.0.0"
   },
   "devDependencies": {
     "babel": "latest",

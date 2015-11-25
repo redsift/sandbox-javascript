@@ -20,10 +20,11 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 	apt-get install -y nodejs \
 		build-essential git \
 		libpython-stdlib libpython2.7-minimal libpython2.7-stdlib mime-support python python-minimal python2.7 python2.7-minimal python-pip && \
-	npm install -g nanomsg && \
 	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Copy support files across
 COPY root /
+
+RUN cd /usr/bin/redsift && npm install
 
 ENTRYPOINT [ "/usr/bin/nodejs" ]
