@@ -1,7 +1,7 @@
 machine:
   environment:
     CONTAINER_NAME: quay.io/redsift/sandbox-nodejs
-    NODEJS_VERSIONS: 0.12 4.x 5.x
+    NODEJS_VERSIONS: 4.x 5.x 0.12
   pre:
     - sudo curl -L -o /usr/bin/docker 'https://s3-external-1.amazonaws.com/circle-downloads/docker-1.9.0-circleci'
     - sudo chmod 0755 /usr/bin/docker  
@@ -11,7 +11,12 @@ machine:
 dependencies:
   override:
     - docker info
-    - docker build --build-arg setup=setup_4.x -t 4.x .
+    - |
+      set -e
+      for VERSION in $NODEJS_VERSIONS
+      do
+        docker build --build-arg setup=setup_$VERSION -t $VERSION .
+      done
 
 deployment:
   production:

@@ -77,10 +77,10 @@ nodes.forEach(function (i) {
 	reply.connect('ipc://' + IPC_ROOT + i + '.sock');
 	reply.on('data', function (msg) {
 		let req = fromEncodedMessage(JSON.parse(msg));
-		console.log('REQ:', req);
+		// console.log('REQ:', req);
 		const start = process.hrtime();
 		let rep = node(req);
-		console.log('REP:', rep);
+		// console.log('REP:', rep);
 		if (!Array.isArray(rep)) {
 			// coerce into an array
 			rep = [ rep ];
