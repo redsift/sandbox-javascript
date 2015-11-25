@@ -22,8 +22,7 @@ function fromEncodedMessage(body) {
 	if ('in' in body) {
 		body.in.data.forEach(function (i) {
 			if (i.value) {
-				var str = new Buffer(i.value, 'base64').toString('utf8');
-				i.value = str;
+				i.value = new Buffer(i.value, 'base64').toString('utf8');
 			}
 		});
 	}
@@ -31,8 +30,7 @@ function fromEncodedMessage(body) {
 	if ('with' in body) {
 		body.with.data.forEach(function (i) {
 			if (i.value) {
-				var str = new Buffer(i.value, 'base64').toString('utf8');
-				i.value = str;
+				i.value = new Buffer(i.value, 'base64').toString('utf8');
 			}
 		});
 	}
@@ -44,8 +42,7 @@ function toEncodedMessage(body) {
 	body.forEach(function (i) {
 		if (i.value) {
             // Encode the data struct as base64
-            var str = JSON.stringify(i.value);
-            i.value = new Buffer(str).toString('base64');
+            i.value = new Buffer(JSON.stringify(i.value)).toString('base64');
         }
 	});
 }
@@ -80,7 +77,7 @@ if ((sift.dag === undefined) || (sift.dag.nodes === undefined)) {
 	throw new Error('Sift does not contain any nodes');
 }
 
-var one = false;
+let one = false;
 nodes.forEach(function (i) {
 	const n = sift.dag.nodes[i];
 	
@@ -109,7 +106,7 @@ nodes.forEach(function (i) {
 			.then(function (value) {
 				const diff = process.hrtime(start);
 				// if node() returns a Promise.all([...]), remove the nesting
-				let flat = toEncodedMessage(flattenNestedArrays(value));
+				const flat = toEncodedMessage(flattenNestedArrays(value));
 				reply.send(JSON.stringify({ out: flat, stats: { result: diff }}));
 			})
 			.catch(function (error) {

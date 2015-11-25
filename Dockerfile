@@ -29,7 +29,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 COPY root /
 
 # Install any required NPM modules
-RUN cd /usr/bin/redsift && npm install && npm run $ES_V && rm -Rf node_modules/babel node_modules/jshint
+RUN cd /usr/bin/redsift && npm install && npm run $ES_V && rm -Rf node_modules/babel-cli node_modules/babel-preset-es2015 node_modules/jshint
 
 VOLUME /run/dagger/sift
 
