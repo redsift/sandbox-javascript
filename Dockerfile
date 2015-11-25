@@ -35,4 +35,4 @@ VOLUME /run/dagger/sift
 
 WORKDIR /run/dagger/sift
 
-ENTRYPOINT [ "/usr/bin/nodejs", "/usr/bin/redsift/bootstrap.js" ]
+ENTRYPOINT [ "/usr/bin/nodejs" ]

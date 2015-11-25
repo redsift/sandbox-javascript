@@ -15,6 +15,7 @@ Parameters are the node numbers you wish the bootstrap to execute.
 		-v <path-to-sift>:/run/dagger/sift 
 		-v <path-to-ipcs>:/run/dagger/ipc 
 		quay.io/redsift/sandbox-nodejs:v4.2.2 
+		/usr/bin/redsift/bootstrap.js
 		0 1 2
 
 `nn_req -X /run/dagger/ipc/0.sock -D "{\"dummy\":1}" --raw`

@@ -21,13 +21,14 @@ dependencies:
         fi
         docker build --build-arg setup=setup_$NV --build-arg esv=$ESV -t $NV .
       done
+      
 test:
   override:
     - |
       set -e
       for NV in $NODEJS_VERSIONS
       do
-        docker run -v $PWD/test:/run/dagger/sift -e TEST=true $NV 0 2
+        docker run -v $PWD/test:/run/dagger/sift -e TEST=true $NV /usr/bin/redsift/bootstrap.js 0 2
       done
   
 deployment:
