@@ -1,6 +1,7 @@
 machine:
   environment:
     CONTAINER_NAME: quay.io/redsift/sandbox-nodejs
+    NODEJS_VERSIONS: 0.12 4.x 5.x
   pre:
     - sudo curl -L -o /usr/bin/docker 'https://s3-external-1.amazonaws.com/circle-downloads/docker-1.9.0-circleci'
     - sudo chmod 0755 /usr/bin/docker  
@@ -10,9 +11,7 @@ machine:
 dependencies:
   override:
     - docker info
-    - docker build --build-arg setup=setup_0.12 -t 0.12 .
     - docker build --build-arg setup=setup_4.x -t 4.x .
-    - docker build --build-arg setup=setup_5.x -t 5.x .
 
 deployment:
   production:
@@ -20,6 +19,8 @@ deployment:
     commands:
       - docker login -e $QUAY_EMAIL -u $QUAY_USER -p $QUAY_PASS quay.io
       - | 
-        VERSION=$(docker run 0.12 --version)
+        VERSION=$(docker run 4.x --version)
         echo "Tagging as $CONTAINER_NAME:$VERSION"
-        docker tag 0.12:latest $CONTAINER_NAME:$VERSION 
+        docker tag 4.x:latest $CONTAINER_NAME:$VERSION
+        docker push $CONTAINER_NAME 
+        
