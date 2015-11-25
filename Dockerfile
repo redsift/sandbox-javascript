@@ -8,9 +8,6 @@ ENV SETUP_URL https://deb.nodesource.com/${setup:-setup_4.x}
 # Fix for ubuntu to ensure /etc/default/locale is present
 RUN update-locale
 
-# Define working directory.
-WORKDIR /tmp
-
 # Install nodejs and a minimal git + python + build tools as npm and node-gyp often needs it for modules
 RUN export DEBIAN_FRONTEND=noninteractive && \
 	echo Using NodeJS from $SETUP_URL && \
@@ -25,6 +22,12 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 # Copy support files across
 COPY root /
 
+# Install any required NPM modules
 RUN cd /usr/bin/redsift && npm install
 
+VOLUME /run/dagger/sift
+WORKDIR /run/dagger/sift
+
 ENTRYPOINT [ "/usr/bin/nodejs" ]
+
+CMD [ "/usr/bin/redsift/boostrap.js" ]
