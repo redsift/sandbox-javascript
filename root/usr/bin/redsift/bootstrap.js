@@ -1,3 +1,5 @@
+/* global Buffer */
+/* global process */
 /*jslint node: true */
 "use strict";
 
@@ -7,30 +9,97 @@ const FS = require('fs');
 const SIFT_ROOT = '/run/dagger/sift/';
 const IPC_ROOT = '/run/dagger/ipc/';
 
+function flattenNestedArrays(value) {
+	if (Array.isArray(value)) {
+		if (value.length === 1 && Array.isArray(value[0])) {
+			return flattenNestedArrays(value[0]);
+		}
+		return value;
+	} 
+	return [ value ];
+}
+
+function fromEncodedMessage(body) {
+	if ('in' in body) {
+		body['in']['data'].forEach(function (i) {
+			if (i.value) {
+				var str = new Buffer(i.value, 'base64').toString('utf8');
+				i.value = str;
+			}
+		});
+	}
+	
+	if ('with' in body) {
+		body['with']['data'].forEach(function (i) {
+			if (i.value) {
+				var str = new Buffer(i.value, 'base64').toString('utf8');
+				i.value = str;
+			}
+		});
+	}
+	
+	return body;
+}
+
+function toEncodedMessage(body) {
+	body.forEach(function (i) {
+		if (i.value) {
+            // Encode the data struct as base64
+            var str = JSON.stringify(i.value);
+            i.value = new Buffer(str).toString('base64');
+        }
+	});
+}
+
+if (process.argv.length < 3) {
+    throw new Error('No nodes to execute');
+}
+
+let nodes = process.argv.slice(2);
+
 const sift = JSON.parse(FS.readFileSync(SIFT_ROOT+'sift.json', 'utf8'));
 
 if ((sift.dag === undefined) || (sift.dag.nodes === undefined)) {
 	throw new Error('Sift does not contain any nodes');
 }
 
-sift.dag.nodes.forEach(function (n, i) {
-	if (n.implementation === undefined || n.implementation.node === undefined) {
-		return;
+var one = false;
+nodes.forEach(function (i) {
+	const n = sift.dag.nodes[i];
+	
+	if (n === undefined || n.implementation === undefined || n.implementation.javascript === undefined) {
+		throw new Error('implementation not supported by boostrap at node #' + i);
 	}
-	const node = require(SIFT_ROOT + n.implementation.node);
+	
+	one = true;
+	const node = require(SIFT_ROOT + n.implementation.javascript);
 	const reply = Nano.socket('rep');
 	reply.connect('ipc://' + IPC_ROOT + i + '.sock');
 	reply.on('data', function (msg) {
-		let req = JSON.parse(msg);
+		let req = fromEncodedMessage(JSON.parse(msg));
 		console.log('REQ:', req);
+		const start = process.hrtime();
 		let rep = node(req);
 		console.log('REP:', rep);
-		// TODO: Check for return types and coerce into [ BucketedData, ... ]
-		reply.send(JSON.stringify(rep));
+		if (!Array.isArray(rep)) {
+			// coerce into an array
+			rep = [ rep ];
+		}
+		Promise.all(rep)
+			.then(function (value) {
+				const diff = process.hrtime(start);
+				// if node() returns a Promise.all([...]), remove the nesting
+				let flat = toEncodedMessage(flattenNestedArrays(value));
+				reply.send(JSON.stringify({ out: flat, stats: { result: diff }}));
+			})
+			.catch(function (error) {
+				const diff = process.hrtime(start);
+				reply.send(JSON.stringify({ error: error, stats: { result: diff }}));
+				console.error(error);
+			});
 	});
 });
 
-
-
-
-console.log('Hello World');
+if (!one) {
+	throw new Error('No javascript implementations');
+}
