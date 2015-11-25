@@ -13,6 +13,7 @@ dependencies:
 
 deployment:
   production:
+    branch: master  
     commands:
       - docker login -e $QUAY_EMAIL -u $QUAY_USER -p $QUAY_PASS quay.io
       - | 
