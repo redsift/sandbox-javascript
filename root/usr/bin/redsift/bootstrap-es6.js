@@ -20,7 +20,7 @@ function flattenNestedArrays(value) {
 
 function fromEncodedMessage(body) {
 	if ('in' in body) {
-		body['in']['data'].forEach(function (i) {
+		body.in.data.forEach(function (i) {
 			if (i.value) {
 				var str = new Buffer(i.value, 'base64').toString('utf8');
 				i.value = str;
@@ -29,7 +29,7 @@ function fromEncodedMessage(body) {
 	}
 	
 	if ('with' in body) {
-		body['with']['data'].forEach(function (i) {
+		body.with.data.forEach(function (i) {
 			if (i.value) {
 				var str = new Buffer(i.value, 'base64').toString('utf8');
 				i.value = str;

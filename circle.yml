@@ -1,7 +1,7 @@
 machine:
   environment:
     CONTAINER_NAME: quay.io/redsift/sandbox-nodejs
-    NODEJS_VERSIONS: 4.x 5.x 0.12
+    NODEJS_VERSIONS: 0.12 4.x 5.x 
   pre:
     - sudo curl -L -o /usr/bin/docker 'https://s3-external-1.amazonaws.com/circle-downloads/docker-1.9.0-circleci'
     - sudo chmod 0755 /usr/bin/docker  
@@ -15,7 +15,11 @@ dependencies:
       set -e
       for NV in $NODEJS_VERSIONS
       do
-        docker build --build-arg setup=setup_$NV --build-arg esv=es5 -t $NV .
+        ESV=es6
+        if [ $NV -eq "0.12" ]; then
+          ESV=es5
+        fi
+        docker build --build-arg setup=setup_$NV --build-arg esv=$ESV -t $NV .
       done
 test:
   override:

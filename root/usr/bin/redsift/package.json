@@ -4,14 +4,14 @@
   "description": "Sets up the sandbox for NodeJS backend tasks",
   "scripts": {
     "lint": "jshint --config .jshinrc bootstrap-es6.js",
-    "es5": "./node_modules/.bin/babel bootstrap-es6.js -o bootstrap.js -b es6.constants",
+    "es5": "node node_modules/babel-cli/bin/babel.js -o bootstrap.js -b es6.constants",
     "es6": "cp bootstrap-es6.js bootstrap.js"
   },
   "dependencies": {
     "nanomsg": "^3.0.0"
   },
   "devDependencies": {
-    "babel": "latest",
+    "babel-cli": "latest",
     "jshint": "latest"
   },
   "private": true
