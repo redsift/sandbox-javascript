@@ -16,7 +16,7 @@ dependencies:
       for NV in $NODEJS_VERSIONS
       do
         ESV=es6
-        if [ $NV -eq "0.12" ]; then
+        if [ "$NV" -eq "0.12" ]; then
           ESV=es5
         fi
         docker build --build-arg setup=setup_$NV --build-arg esv=$ESV -t $NV .
