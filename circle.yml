@@ -16,6 +16,6 @@ deployment:
     commands:
       - docker login -e $QUAY_EMAIL -u $QUAY_USER -p $QUAY_PASS quay.io
       - |
-         VERSION=$(docker run 0.12 --version)
+		 VERSION=$(docker run 0.12 --version)
 		 echo "Tagging as $CONTAINER_NAME:$VERSION"
 		 docker tag 0.12:latest $CONTAINER_NAME:$VERSION 
