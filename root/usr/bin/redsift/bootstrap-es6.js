@@ -47,11 +47,11 @@ function toEncodedMessage(body) {
 	});
 }
 
+// -------- Main
+
 if (process.argv.length < 3) {
     throw new Error('No nodes to execute');
 }
-
-// -------- Main
 
 const SIFT_ROOT = process.env.SIFT_ROOT;
 const IPC_ROOT = process.env.IPC_ROOT;
