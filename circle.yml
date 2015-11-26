@@ -28,7 +28,7 @@ test:
       set -e
       for NV in $NODEJS_VERSIONS
       do
-        docker run -v $PWD/test:/run/dagger/sift -e TEST=true $NV /usr/bin/redsift/bootstrap.js 0 2
+        docker run -v $PWD/test:/run/dagger/sift -e DRY=true $NV /usr/bin/redsift/bootstrap.js 0 2
       done
   
 deployment:

@@ -55,7 +55,7 @@ if (process.argv.length < 3) {
 
 const SIFT_ROOT = process.env.SIFT_ROOT;
 const IPC_ROOT = process.env.IPC_ROOT;
-const TEST = (process.env.TEST === 'true');
+const DRY = (process.env.DRY === 'true');
 
 if (!SIFT_ROOT) {
 	throw new Error('Environment SIFT_ROOT not set');
@@ -65,7 +65,7 @@ if (!IPC_ROOT) {
 	throw new Error('Environment IPC_ROOT not set');
 }
 
-if (TEST) {
+if (DRY) {
 	console.log('Unit Test Mode');
 }
 
@@ -87,7 +87,8 @@ nodes.forEach(function (i) {
 	
 	one = true;
 	const node = require(path.join(SIFT_ROOT, n.implementation.javascript));
-	if (TEST) {
+	if (DRY) {
+		// Dry run, for testing or warming compiler
 		return;
 	}
 	const reply = Nano.socket('rep');

@@ -7,6 +7,11 @@
 `SIFT_ROOT` Runs the sift made available in this path, defaults to `/run/dagger/sift`
 `IPC_ROOT` Uses Nanomsg req/rep sockets in this path, defaults to `/run/dagger/ipc`. Node ordinality is used as the identity e.g. the 1st node in the DAG comunicates over `/run/dagger/ipc/0.sock`
 
+# Docker launch
+
+`io.redsift.dagger.init` CMD for one time init operations.
+`io.redsift.dagger.run` CMD for run operations.
+
 Parameters are the node numbers you wish the bootstrap to execute.
 
 # Running manually
