@@ -31,6 +31,8 @@ test:
         INIT=$(docker inspect -f "{{index .ContainerConfig.Labels \"io.redsift.dagger.init\" }}" $NV)
         echo "Calling init = $INIT"
         docker run -v $PWD/test:/run/dagger/sift $NV $INIT
+        ls -A $PWD/test/server/node_modules
+        rm -Rf $PWD/test/server/node_modules
         RUN=$(docker inspect -f "{{index .ContainerConfig.Labels \"io.redsift.dagger.run\" }}" $NV)
         echo "Calling run = $RUN"
         docker run -v $PWD/test:/run/dagger/sift -e DRY=true $NV $RUN 0 2
