@@ -1,0 +1,8 @@
+{
+  "name": "unit-test-node-gyp",
+  "description": "Tests the CI install process - node-gyp",
+  "version": "1.0.0",
+  "dependencies": {
+    "bcrypt": "^0.8.5"
+  }
+}

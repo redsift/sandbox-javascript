@@ -1,6 +1,6 @@
 {
-  "name": "unit-test",
-  "description": "Tests the CI install process",
+  "name": "unit-test-npm",
+  "description": "Tests the CI install process - normal packages",
   "version": "1.0.0",
   "dependencies": {
     "money": "^0.2.0",

@@ -3,3 +3,9 @@ root/usr/bin/redsift/node_modules/
 root/usr/bin/redsift/npm-debug.log
 
 root/usr/bin/redsift/bootstrap.js
+
+test/npm-debug.log
+
+test/server-alt/node_modules/
+
+test/server/node_modules/

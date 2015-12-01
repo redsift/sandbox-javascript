@@ -30,12 +30,12 @@ test:
       do
         INIT=$(docker inspect -f "{{index .ContainerConfig.Labels \"io.redsift.dagger.init\" }}" $NV)
         echo "Calling init = $INIT"
-        docker run -v $PWD/test:/run/dagger/sift $NV $INIT
-        ls -A $PWD/test/server/node_modules
-        rm -Rf $PWD/test/server/node_modules
+        docker run -v $PWD/test:/run/dagger/sift $NV $INIT 0 2 3
+        ls -A $PWD/test/server/node_modules $PWD/test/server-alt/node_modules
         RUN=$(docker inspect -f "{{index .ContainerConfig.Labels \"io.redsift.dagger.run\" }}" $NV)
         echo "Calling run = $RUN"
-        docker run -v $PWD/test:/run/dagger/sift -e DRY=true $NV $RUN 0 2
+        docker run -v $PWD/test:/run/dagger/sift -e DRY=true $NV $RUN 0 2 3
+        rm -Rf $PWD/test/server/node_modules $PWD/test/server-alt/node_modules
       done
   
 deployment:
