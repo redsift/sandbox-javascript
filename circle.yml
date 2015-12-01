@@ -28,7 +28,12 @@ test:
       set -e
       for NV in $NODEJS_VERSIONS
       do
-        docker run -v $PWD/test:/run/dagger/sift -e DRY=true $NV /usr/bin/redsift/bootstrap.js 0 2
+        INIT=$(docker inspect -f "{{index .ContainerConfig.Labels \"io.redsift.dagger.init\" }}" $NV)
+        echo "Calling init = $INIT"
+        docker run -v $PWD/test:/run/dagger/sift $NV $INIT
+        RUN=$(docker inspect -f "{{index .ContainerConfig.Labels \"io.redsift.dagger.run\" }}" $NV)
+        echo "Calling run = $RUN"
+        docker run -v $PWD/test:/run/dagger/sift -e DRY=true $NV $RUN 0 2
       done
   
 deployment:

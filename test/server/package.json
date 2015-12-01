@@ -1,0 +1,13 @@
+{
+  "name": "unit-test",
+  "description": "Tests the CI install process",
+  "version": "1.0.0",
+  "dependencies": {
+    "money": "^0.2.0",
+    "request-promise": "^0.4.3",
+    "string": "^3.3.1"
+  },
+  "devDependencies": {
+    "underscore": "^1.8.3"
+  }
+}

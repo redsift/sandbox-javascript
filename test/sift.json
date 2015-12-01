@@ -4,7 +4,7 @@
 		{
 			"#": "Test Node 1",
 			"implementation": {
-				"javascript": "node1.js"  
+				"javascript": "server/node1.js"  
 			}
 		},
 		{
@@ -16,7 +16,7 @@
 		{
 			"#": "Test Node 2",
 			"implementation": {
-				"javascript": "node2.js"  
+				"javascript": "server/node2.js"  
 			}
 		}		
 	]
