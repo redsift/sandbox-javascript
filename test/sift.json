@@ -22,7 +22,7 @@
 		{
 			"#": "Test Node 3",
 			"implementation": {
-				"javascript": "server-plain/node3.js"  
+				"node": "server-plain/node3.js"  
 			}
 		}			
 	]

@@ -12,7 +12,7 @@
 `io.redsift.dagger.init` CMD for one time init operations.
 `io.redsift.dagger.run` CMD for run operations.
 
-Parameters are the node numbers you wish the bootstrap to execute.
+Parameters are the node numbers you wish the bootstrap to init or execute.
 
 # Running manually
 

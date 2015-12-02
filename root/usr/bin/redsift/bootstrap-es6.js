@@ -85,8 +85,12 @@ nodes.forEach(function (i) {
 		throw new Error('implementation not supported by boostrap at node #' + i);
 	}
 	
-	one = true;
-	const node = require(path.join(SIFT_ROOT, n.implementation.javascript));
+	one = true;	
+	var js = n.implementation.javascript;
+	if (js === undefined) {
+		js = n.implementation.node;
+	}	
+	const node = require(path.join(SIFT_ROOT, js));
 	if (DRY) {
 		// Dry run, for testing or warming compiler
 		return;

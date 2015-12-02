@@ -31,7 +31,11 @@ if ((sift.dag === undefined) || (sift.dag.nodes === undefined)) {
 }
 
 var paths = sift.dag.nodes.map(function (n) {
-	return path.join(SIFT_ROOT, path.dirname(n.implementation.javascript));
+	var js = n.implementation.javascript;
+	if (js === undefined) {
+		js = n.implementation.node;
+	}
+	return path.join(SIFT_ROOT, path.dirname(js));
 });
 
 var map = {};
