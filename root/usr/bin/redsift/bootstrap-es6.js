@@ -81,7 +81,9 @@ let one = false;
 nodes.forEach(function (i) {
 	const n = sift.dag.nodes[i];
 	
-	if (n === undefined || n.implementation === undefined || n.implementation.javascript === undefined) {
+	if (n === undefined 
+	|| n.implementation === undefined 
+	|| (n.implementation.javascript === undefined && n.implementation.node === undefined)) {
 		throw new Error('implementation not supported by boostrap at node #' + i);
 	}
 	
