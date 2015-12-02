@@ -45,6 +45,8 @@ function toEncodedMessage(body) {
             i.value = new Buffer(JSON.stringify(i.value)).toString('base64');
         }
 	});
+	
+	return body;
 }
 
 // -------- Main
