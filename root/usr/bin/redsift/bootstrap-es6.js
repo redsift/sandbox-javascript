@@ -40,7 +40,7 @@ function fromEncodedMessage(body) {
 
 function toEncodedMessage(body) {
 	body.forEach(function (i) {
-		if (i.value) {
+		if (i != null && i.value) {
             // Encode the data struct as base64
             i.value = new Buffer(JSON.stringify(i.value)).toString('base64');
         }
@@ -104,16 +104,18 @@ nodes.forEach(function (i) {
 		// console.log('REQ:', req);
 		const start = process.hrtime();
 		let rep = node(req);
-		// console.log('REP:', rep);
+		console.log('REP:', rep);
 		if (!Array.isArray(rep)) {
 			// coerce into an array
 			rep = [ rep ];
 		}
 		Promise.all(rep)
 			.then(function (value) {
+				console.log('REP-VALUE:', value);
 				const diff = process.hrtime(start);
 				// if node() returns a Promise.all([...]), remove the nesting
 				const flat = toEncodedMessage(flattenNestedArrays(value));
+				console.log('REP-FLAT:', flat);
 				reply.send(JSON.stringify({ out: flat, stats: { result: diff }}));
 			})
 			.catch(function (error) {
