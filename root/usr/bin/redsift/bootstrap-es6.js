@@ -52,7 +52,7 @@ function toEncodedMessage(body) {
     body.forEach(function (i) {
         if (i != null && i.value) {
             var str = i.value;
-            if (!(typeof str === 'string' || str instanceof String)) {
+            if (!(typeof str === 'string' || str instanceof String) && !(str instanceof Buffer)) {
                 str = JSON.stringify(i.value);
             }
             // Encode the data struct as base64
