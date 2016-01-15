@@ -37,11 +37,17 @@ function fromEncodedMessage(body) {
 
     if ('lookup' in body) {
         body.lookup.forEach(function(l) {
+<<<<<<< Updated upstream
             l.data.forEach(function (i) {
                 if (i.value) {
                     i.value = new Buffer(i.value, 'base64');
                 }
             });
+=======
+            if (l.data && l.data.value) {
+                l.data.value = new Buffer(l.data.value, 'base64').toString('utf8');
+            }
+>>>>>>> Stashed changes
         });
     }
 
