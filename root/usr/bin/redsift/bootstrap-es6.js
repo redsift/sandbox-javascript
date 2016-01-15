@@ -14,7 +14,7 @@ function flattenNestedArrays(value) {
             return flattenNestedArrays(value[0]);
         }
         return value;
-    } 
+    }
     return [ value ];
 }
 
@@ -26,7 +26,7 @@ function fromEncodedMessage(body) {
             }
         });
     }
-    
+
     if ('with' in body) {
         body.with.data.forEach(function (i) {
             if (i.value) {
@@ -34,7 +34,17 @@ function fromEncodedMessage(body) {
             }
         });
     }
-    
+
+    if ('lookup' in body) {
+        body.lookup.forEach(function(l) {
+            l.data.forEach(function (i) {
+                if (i.value) {
+                    i.value = new Buffer(i.value, 'base64').toString('utf8');
+                }
+            });
+        });
+    }
+
     return body;
 }
 
@@ -45,7 +55,7 @@ function toEncodedMessage(body) {
             i.value = new Buffer(JSON.stringify(i.value)).toString('base64');
         }
     });
-    
+
     return body;
 }
 
@@ -82,18 +92,18 @@ if ((sift.dag === undefined) || (sift.dag.nodes === undefined)) {
 let one = false;
 nodes.forEach(function (i) {
     const n = sift.dag.nodes[i];
-    
+
     if (n === undefined ||
     n.implementation === undefined ||
     (n.implementation.javascript === undefined && n.implementation.node === undefined)) {
         throw new Error('implementation not supported by boostrap at node #' + i);
     }
-    
-    one = true; 
+
+    one = true;
     var js = n.implementation.javascript;
     if (js === undefined) {
         js = n.implementation.node;
-    }   
+    }
     const node = require(path.join(SIFT_ROOT, js));
     if (DRY) {
         // Dry run, for testing or warming compiler
@@ -105,7 +115,7 @@ nodes.forEach(function (i) {
         let req = fromEncodedMessage(JSON.parse(msg));
         // console.log('REQ:', req);
         const start = process.hrtime();
-        
+
         var rep = null;
         try {
           rep = node(req);
@@ -113,7 +123,7 @@ nodes.forEach(function (i) {
           reply.send(JSON.stringify({ error: error}));
           return;
         }
-        
+
         console.log('REP:', rep);
         if (!Array.isArray(rep)) {
             // coerce into an array
