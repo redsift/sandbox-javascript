@@ -120,7 +120,13 @@ nodes.forEach(function (i) {
         try {
           rep = node(req);
         } catch(error) {
-          reply.send(JSON.stringify({ error: error}));
+          var err = {
+            message: error.message,
+            stack: error.stack,
+            fileName: error.fileName,
+            lineNumber: error.lineNumber
+          }
+          reply.send(JSON.stringify({ error: err}));
           return;
         }
 
