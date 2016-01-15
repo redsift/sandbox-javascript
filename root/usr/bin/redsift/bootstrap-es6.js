@@ -22,7 +22,7 @@ function fromEncodedMessage(body) {
     if ('in' in body) {
         body.in.data.forEach(function (i) {
             if (i.value) {
-                i.value = new Buffer(i.value, 'base64').toString('utf8');
+                i.value = new Buffer(i.value, 'base64');
             }
         });
     }
@@ -30,7 +30,7 @@ function fromEncodedMessage(body) {
     if ('with' in body) {
         body.with.data.forEach(function (i) {
             if (i.value) {
-                i.value = new Buffer(i.value, 'base64').toString('utf8');
+                i.value = new Buffer(i.value, 'base64');
             }
         });
     }
@@ -39,7 +39,7 @@ function fromEncodedMessage(body) {
         body.lookup.forEach(function(l) {
             l.data.forEach(function (i) {
                 if (i.value) {
-                    i.value = new Buffer(i.value, 'base64').toString('utf8');
+                    i.value = new Buffer(i.value, 'base64');
                 }
             });
         });
@@ -51,8 +51,12 @@ function fromEncodedMessage(body) {
 function toEncodedMessage(body) {
     body.forEach(function (i) {
         if (i != null && i.value) {
+            var str = i.value;
+            if (!(typeof str === 'string' || str instanceof String)) {
+                str = JSON.stringify(i.value);
+            }
             // Encode the data struct as base64
-            i.value = new Buffer(JSON.stringify(i.value)).toString('base64');
+            i.value = new Buffer(str).toString('base64');
         }
     });
 
