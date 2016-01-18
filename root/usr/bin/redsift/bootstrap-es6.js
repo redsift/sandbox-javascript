@@ -132,18 +132,18 @@ nodes.forEach(function (i) {
           return;
         }
 
-        console.log('REP:', rep);
+        //console.log('REP:', rep);
         if (!Array.isArray(rep)) {
             // coerce into an array
             rep = [ rep ];
         }
         Promise.all(rep)
             .then(function (value) {
-                console.log('REP-VALUE:', value);
+                //console.log('REP-VALUE:', value);
                 const diff = process.hrtime(start);
                 // if node() returns a Promise.all([...]), remove the nesting
                 const flat = toEncodedMessage(flattenNestedArrays(value));
-                console.log('REP-FLAT:', flat);
+                //console.log('REP-FLAT:', flat);
                 reply.send(JSON.stringify({ out: flat, stats: { result: diff }}));
             })
             .catch(function (error) {
