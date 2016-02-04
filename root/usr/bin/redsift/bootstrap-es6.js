@@ -67,7 +67,7 @@ if (process.argv.length < 3) {
     throw new Error('No nodes to execute');
 }
 
-const SIFT_ROOT = path.resolve(process.env.SIFT_ROOT);
+var SIFT_ROOT = path.resolve(process.env.SIFT_ROOT);
 const IPC_ROOT = process.env.IPC_ROOT;
 const DRY = (process.env.DRY === 'true');
 
@@ -85,7 +85,16 @@ if (DRY) {
 
 const nodes = process.argv.slice(2);
 
-const sift = JSON.parse(FS.readFileSync(path.join(SIFT_ROOT, 'sift.json'), 'utf8'));
+var siftPath = '';
+
+if (SIFT_ROOT.indexOf('.json') > 0) {
+    siftPath = SIFT_ROOT;
+    SIFT_ROOT = path.dirname(SIFT_ROOT)
+} else {
+    siftPath = path.join(SIFT_ROOT, 'sift.json');
+}
+
+const sift = JSON.parse(FS.readFileSync(siftPath, 'utf8'));
 
 if ((sift.dag === undefined) || (sift.dag.nodes === undefined)) {
     throw new Error('Sift does not contain any nodes');
