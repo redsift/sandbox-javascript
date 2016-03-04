@@ -89,7 +89,7 @@ var siftPath = '';
 
 if (SIFT_ROOT.indexOf('.json') > 0) {
     siftPath = SIFT_ROOT;
-    SIFT_ROOT = path.dirname(SIFT_ROOT)
+    SIFT_ROOT = path.dirname(SIFT_ROOT);
 } else {
     siftPath = path.join(SIFT_ROOT, 'sift.json');
 }
@@ -136,7 +136,7 @@ nodes.forEach(function (i) {
             stack: error.stack,
             fileName: error.fileName,
             lineNumber: error.lineNumber
-          }
+          };
           reply.send(JSON.stringify({ error: err}));
           return;
         }

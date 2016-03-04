@@ -1,5 +1,7 @@
 /* global Promise */
 /* global process */
+'use strict';
+
 var child = require('child_process');
 var fs = require('fs');
 var path = require('path');
@@ -74,7 +76,7 @@ var final = Object.keys(map).reduce(function (last, pathToInstall) {
 				if (err) {
 					console.error(stderr);
 					ko('npm installed failed in ' + pathToInstall + ' exit code:' + err.code);
-					return
+					return;
 				}
 				ok();
 			});
