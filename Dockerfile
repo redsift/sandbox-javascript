@@ -17,14 +17,14 @@ RUN update-locale
 
 # Install nodejs and a minimal git + python + build tools as npm and node-gyp often needs it for modules
 RUN export DEBIAN_FRONTEND=noninteractive && \
-	echo Using NodeJS from $SETUP_URL && \
+	  echo Using NodeJS from $SETUP_URL && \
     apt-get update && \
     apt-get install -y curl && \
-	curl -sL $SETUP_URL | bash - && \
-	apt-get install -y nodejs \
-		build-essential git \
-		libpython-stdlib libpython2.7-minimal libpython2.7-stdlib mime-support python python-minimal python2.7 python2.7-minimal python-pip && \
-	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+	  curl -sL $SETUP_URL | bash - && \
+	  apt-get install -y nodejs \
+  		build-essential git \
+  		libpython-stdlib libpython2.7-minimal libpython2.7-stdlib mime-support python python-minimal python2.7 python2.7-minimal python-pip && \
+  	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Copy support files across
 COPY root /

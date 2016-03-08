@@ -18,47 +18,54 @@ function flattenNestedArrays(value) {
     return [ value ];
 }
 
-function fromEncodedMessage(body) {
-    if ('in' in body) {
-        body.in.data.forEach(function (i) {
-            if (i.value) {
-                i.value = new Buffer(i.value, 'base64');
-            }
-        });
-    }
+function b64Decode(d) {
+  if (d.data) {
+    d.data.forEach(function (i) {
+        if (i.value) {
+            i.value = new Buffer(i.value, 'base64');
+        }
+    });
+  }
+  return d;
+}
 
-    if ('with' in body) {
-        body.with.data.forEach(function (i) {
-            if (i.value) {
-                i.value = new Buffer(i.value, 'base64');
-            }
-        });
-    }
+function b64Encode(i) {
+  if (i != null && i.value) {
+      var str = i.value;
+      if (!(typeof str === 'string' || str instanceof String) && !(str instanceof Buffer)) {
+          str = JSON.stringify(i.value);
+      }
+      // Encode the data struct as base64
+      i.value = new Buffer(str).toString('base64');
+  }
+  return i;
+}
+
+function fromEncodedMessage(body) {
+    ['in', 'with'].forEach(function (k) {
+      if (k in body) {
+          body[k] = b64Decode(body[k]);
+      }
+    });
 
     if ('lookup' in body) {
         body.lookup.forEach(function(l) {
-            if (l.data && l.data.value) {
-                l.data.value = new Buffer(l.data.value, 'base64');
-            }
+            l = b64Decode(l);
         });
     }
 
     return body;
 }
 
-function toEncodedMessage(body) {
-    body.forEach(function (i) {
-        if (i != null && i.value) {
-            var str = i.value;
-            if (!(typeof str === 'string' || str instanceof String) && !(str instanceof Buffer)) {
-                str = JSON.stringify(i.value);
-            }
-            // Encode the data struct as base64
-            i.value = new Buffer(str).toString('base64');
-        }
+function toEncodedMessage(value, diff) {
+    // if node() returns a Promise.all([...]), remove the nesting
+    const flat = flattenNestedArrays(value);
+    //console.log('REP-FLAT:', flat);
+    flat.forEach(function (i) {
+        i = b64Encode(i);
     });
 
-    return body;
+    return JSON.stringify({ out: flat, stats: { result: diff }});
 }
 
 // -------- Main
@@ -150,10 +157,7 @@ nodes.forEach(function (i) {
             .then(function (value) {
                 //console.log('REP-VALUE:', value);
                 const diff = process.hrtime(start);
-                // if node() returns a Promise.all([...]), remove the nesting
-                const flat = toEncodedMessage(flattenNestedArrays(value));
-                //console.log('REP-FLAT:', flat);
-                reply.send(JSON.stringify({ out: flat, stats: { result: diff }}));
+                reply.send(toEncodedMessage(value, diff));
             })
             .catch(function (error) {
                 const diff = process.hrtime(start);
