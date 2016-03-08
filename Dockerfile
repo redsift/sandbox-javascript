@@ -9,7 +9,7 @@ ARG esv=es6
 
 ENV SETUP_URL=https://deb.nodesource.com/${setup} ES_V=${esv}
 
-ENV SIFT_ROOT="/run/dagger/sift" IPC_ROOT="/run/dagger/ipc"
+ENV SIFT_ROOT="/run/dagger/sift" IPC_ROOT="/run/dagger/ipc" SIFT_JSON="sift.json"
 LABEL io.redsift.dagger.init="/usr/bin/redsift/install.js" io.redsift.dagger.run="/usr/bin/redsift/bootstrap.js"
 
 # Fix for ubuntu to ensure /etc/default/locale is present
