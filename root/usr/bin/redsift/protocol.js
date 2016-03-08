@@ -53,7 +53,7 @@ function fromEncodedMessage(body) {
 
 function toEncodedMessage(value, diff) {
     // if node() returns a Promise.all([...]), remove the nesting
-    const flat = flattenNestedArrays(value);
+    var flat = flattenNestedArrays(value);
     //console.log('REP-FLAT:', flat);
     flat.forEach(function (i) {
         i = b64Encode(i);
