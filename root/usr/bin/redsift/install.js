@@ -8,29 +8,18 @@ var path = require('path');
 
 var MAX_STDERR_BUFFER = 1024 * 1024;
 
+// -------- Init
+
+var init = require('./init.js');
+
+var nodes = init.nodes;
+
+var SIFT_ROOT = init.SIFT_ROOT;
+var SIFT_JSON = init.SIFT_JSON;
+
+var sift = init.sift;
+
 // -------- Main
-
-if (process.argv.length < 3) {
-    throw new Error('No nodes to execute');
-}
-
-var nodes = process.argv.slice(2);
-
-var SIFT_ROOT = process.env.SIFT_ROOT;
-
-if (!SIFT_ROOT) {
-	throw new Error('Environment SIFT_ROOT not set');
-}
-
-if (!path.isAbsolute(SIFT_ROOT)) {
-	throw new Error('Environment SIFT_ROOT "' + SIFT_ROOT + '" must be absolute');
-}
-
-var sift = JSON.parse(fs.readFileSync(path.join(SIFT_ROOT, 'sift.json'), 'utf8'));
-
-if ((sift.dag === undefined) || (sift.dag.nodes === undefined)) {
-	throw new Error('Sift does not contain any nodes');
-}
 
 var paths = sift.dag.nodes.map(function (n) {
 	if (n.implementation === undefined) {

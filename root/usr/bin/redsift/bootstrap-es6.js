@@ -7,105 +7,22 @@
 const Nano = require('nanomsg');
 const FS = require('fs');
 const path = require('path');
+const protocol = require('./protocol.js');
 
-function flattenNestedArrays(value) {
-    if (Array.isArray(value)) {
-        if (value.length === 1 && Array.isArray(value[0])) {
-            return flattenNestedArrays(value[0]);
-        }
-        return value;
-    }
-    return [ value ];
-}
+// -------- Init
 
-function b64Decode(d) {
-  if (d.data) {
-    d.data.forEach(function (i) {
-        if (i.value) {
-            i.value = new Buffer(i.value, 'base64');
-        }
-    });
-  }
-  return d;
-}
+const init = require('./init.js');
 
-function b64Encode(i) {
-  if (i != null && i.value) {
-      var str = i.value;
-      if (!(typeof str === 'string' || str instanceof String) && !(str instanceof Buffer)) {
-          str = JSON.stringify(i.value);
-      }
-      // Encode the data struct as base64
-      i.value = new Buffer(str).toString('base64');
-  }
-  return i;
-}
+const nodes = init.nodes;
 
-function fromEncodedMessage(body) {
-    ['in', 'with'].forEach(function (k) {
-      if (k in body) {
-          body[k] = b64Decode(body[k]);
-      }
-    });
+const SIFT_ROOT = init.SIFT_ROOT;
+const SIFT_JSON = init.SIFT_JSON;
+const IPC_ROOT = init.IPC_ROOT;
+const DRY = init.DRY;
 
-    if ('lookup' in body) {
-        body.lookup.forEach(function(l) {
-            l = b64Decode(l);
-        });
-    }
-
-    return body;
-}
-
-function toEncodedMessage(value, diff) {
-    // if node() returns a Promise.all([...]), remove the nesting
-    const flat = flattenNestedArrays(value);
-    //console.log('REP-FLAT:', flat);
-    flat.forEach(function (i) {
-        i = b64Encode(i);
-    });
-
-    return JSON.stringify({ out: flat, stats: { result: diff }});
-}
+const sift = init.sift;
 
 // -------- Main
-
-if (process.argv.length < 3) {
-    throw new Error('No nodes to execute');
-}
-
-var SIFT_ROOT = path.resolve(process.env.SIFT_ROOT);
-const IPC_ROOT = process.env.IPC_ROOT;
-const DRY = (process.env.DRY === 'true');
-
-if (!SIFT_ROOT) {
-    throw new Error('Environment SIFT_ROOT not set');
-}
-
-if (!IPC_ROOT) {
-    throw new Error('Environment IPC_ROOT not set');
-}
-
-if (DRY) {
-    console.log('Unit Test Mode');
-}
-
-const nodes = process.argv.slice(2);
-
-var siftPath = '';
-
-if (SIFT_ROOT.indexOf('.json') > 0) {
-    siftPath = SIFT_ROOT;
-    SIFT_ROOT = path.dirname(SIFT_ROOT);
-} else {
-    siftPath = path.join(SIFT_ROOT, 'sift.json');
-}
-
-const sift = JSON.parse(FS.readFileSync(siftPath, 'utf8'));
-
-if ((sift.dag === undefined) || (sift.dag.nodes === undefined)) {
-    throw new Error('Sift does not contain any nodes');
-}
 
 let one = false;
 nodes.forEach(function (i) {
@@ -130,7 +47,7 @@ nodes.forEach(function (i) {
     const reply = Nano.socket('rep');
     reply.connect('ipc://' + path.join(IPC_ROOT, i + '.sock'));
     reply.on('data', function (msg) {
-        let req = fromEncodedMessage(JSON.parse(msg));
+        let req = protocol.fromEncodedMessage(JSON.parse(msg));
         // console.log('REQ:', req);
         const start = process.hrtime();
 
@@ -157,7 +74,7 @@ nodes.forEach(function (i) {
             .then(function (value) {
                 //console.log('REP-VALUE:', value);
                 const diff = process.hrtime(start);
-                reply.send(toEncodedMessage(value, diff));
+                reply.send(protocol.toEncodedMessage(value, diff));
             })
             .catch(function (error) {
                 const diff = process.hrtime(start);
