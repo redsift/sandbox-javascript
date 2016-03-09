@@ -1,6 +1,5 @@
 # Sandbox for NodeJS
-
-[![Docker Repository on Quay](https://quay.io/repository/redsift/sandbox-nodejs/status "Docker Repository on Quay")](https://quay.io/repository/redsift/sandbox-nodejs)
+[![Docker Repository on Quay](https://quay.io/repository/redsift/sandbox-javascript/status "Docker Repository on Quay")](https://quay.io/repository/redsift/sandbox-javascript)
 
 # Filesystem Layout and API
 
@@ -19,7 +18,7 @@ Parameters are the node numbers you wish the bootstrap to init or execute.
 	docker run 
 		-v <path-to-sift>:/run/dagger/sift 
 		-v <path-to-ipcs>:/run/dagger/ipc 
-		quay.io/redsift/sandbox-nodejs:v4.2.2 
+		quay.io/redsift/sandbox-javascript:v4.2.2
 		/usr/bin/redsift/bootstrap.js
 		0 1 2
 
