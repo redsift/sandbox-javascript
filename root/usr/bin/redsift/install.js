@@ -27,9 +27,6 @@ var paths = sift.dag.nodes.map(function (n) {
 	}
 	
 	var js = n.implementation.javascript;
-	if (js === undefined) {
-		js = n.implementation.node;
-	}
 	return path.join(SIFT_ROOT, path.dirname(js));
 });
 

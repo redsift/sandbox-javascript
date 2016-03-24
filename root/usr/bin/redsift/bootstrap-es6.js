@@ -30,15 +30,12 @@ nodes.forEach(function (i) {
 
     if (n === undefined ||
     n.implementation === undefined ||
-    (n.implementation.javascript === undefined && n.implementation.node === undefined)) {
+    (n.implementation.javascript === undefined)) {
         throw new Error('implementation not supported by boostrap at node #' + i);
     }
 
     one = true;
     var js = n.implementation.javascript;
-    if (js === undefined) {
-        js = n.implementation.node;
-    }
     const node = require(path.join(SIFT_ROOT, js));
     if (DRY) {
         // Dry run, for testing or warming compiler
