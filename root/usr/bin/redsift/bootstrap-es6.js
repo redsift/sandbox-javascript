@@ -42,6 +42,7 @@ nodes.forEach(function (i) {
         return;
     }
     const reply = Nano.socket('rep');
+    reply.rcvmaxsize(-1);
     reply.connect('ipc://' + path.join(IPC_ROOT, i + '.sock'));
     reply.on('data', function (msg) {
         let req = protocol.fromEncodedMessage(JSON.parse(msg));
