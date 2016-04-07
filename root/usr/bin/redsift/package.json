@@ -8,7 +8,6 @@
     "es6": "cp bootstrap-es6.js bootstrap.js"
   },
   "dependencies": {
-    "nanomsg": "^3.1.1"
   },
   "devDependencies": {
     "babel-cli": "latest",
