@@ -1,0 +1,9 @@
+{
+  "name": "redsift-bootstrap",
+  "version": "1.1.0",
+  "description": "Sets up the sandbox for NodeJS backend tasks",
+  "dependencies": {
+    "nanomsg": "~3.1.1"
+  },
+  "private": true
+}
