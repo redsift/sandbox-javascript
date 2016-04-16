@@ -1,0 +1,30 @@
+#!/bin/bash
+
+LATEST=false
+case "$NODE_VERSION" in
+  0.12)
+    LATEST=true
+  ;;
+  4.x)
+    LATEST=true
+  ;;
+  5.x)
+    LATEST=true
+  ;;
+esac
+
+apt-get install -y curl
+
+if [ "$LATEST" = true ] ; then
+  echo 'Using NodeJS from $SETUP_URL'
+  apt-get update
+  curl -sL $SETUP_URL | bash -
+  apt-get install -y nodejs
+else
+  echo 'Building NodeJS version $NODE_VERSION'
+  mkdir /tmp/nodejs
+  cd /tmp/nodejs
+  curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz"
+  tar -xJf "node-v$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-components=1
+  rm "node-v$NODE_VERSION-linux-x64.tar.xz"
+fi

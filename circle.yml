@@ -1,10 +1,10 @@
 machine:
   environment:
     CONTAINER_NAME: quay.io/redsift/sandbox-javascript
-    NODEJS_VERSIONS: 0.12 4.x 5.x
+    NODEJS_VERSIONS: 0.12.13 4.4.2 5.10.0 0.12 4.x 5.x
   pre:
     - sudo curl -L -o /usr/bin/docker 'https://s3-external-1.amazonaws.com/circle-downloads/docker-1.9.0-circleci'
-    - sudo chmod 0755 /usr/bin/docker  
+    - sudo chmod 0755 /usr/bin/docker
   services:
     - docker
 
@@ -16,12 +16,14 @@ dependencies:
       for NV in $NODEJS_VERSIONS
       do
         ESV=es6
-        if [ "$NV" = "0.12" ]; then
+        case "$NV" in
+          0.12*)
           ESV=es5
-        fi
-        docker build --build-arg setup=setup_$NV --build-arg esv=$ESV -t $NV .
+          ;;
+        esac
+        docker build --build-arg nodev=$NV --build-arg esv=$ESV -t $NV .
       done
-      
+
 test:
   override:
     - |
@@ -37,13 +39,13 @@ test:
         docker run -v $PWD/test:/run/dagger/sift -e DRY=true $NV $RUN 0 2 3
         sudo rm -Rf $PWD/test/server/node_modules $PWD/test/server-alt/node_modules
       done
-  
+
 deployment:
   production:
-    branch: master  
+    branch: master
     commands:
       - docker login -e $QUAY_EMAIL -u $QUAY_USER -p $QUAY_PASS quay.io
-      - | 
+      - |
         set -e
         for NV in $NODEJS_VERSIONS
         do

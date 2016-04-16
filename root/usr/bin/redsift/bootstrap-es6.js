@@ -36,11 +36,19 @@ nodes.forEach(function (i) {
 
     one = true;
     var js = n.implementation.javascript;
-    const node = require(path.join(SIFT_ROOT, js));
+    var node = null;
+    var nodeErr = null;
+    try {
+      node = require(path.join(SIFT_ROOT, js));
+    } catch (err) {
+      nodeErr = err;
+    }
+
     if (DRY) {
         // Dry run, for testing or warming compiler
         return;
     }
+
     const reply = Nano.socket('rep');
     reply.rcvmaxsize(-1);
     reply.connect('ipc://' + path.join(IPC_ROOT, i + '.sock'));
@@ -51,13 +59,16 @@ nodes.forEach(function (i) {
 
         var rep = null;
         try {
+          if (nodeErr) {
+            throw nodeErr;
+          }
           rep = node(req);
-        } catch(error) {
+        } catch(computeErr) {
           var err = {
-            message: error.message,
-            stack: error.stack,
-            fileName: error.fileName,
-            lineNumber: error.lineNumber
+            message: computeErr.message,
+            stack: computeErr.stack,
+            fileName: computeErr.fileName,
+            lineNumber: computeErr.lineNumber
           };
           reply.send(JSON.stringify({ error: err}));
           return;
