@@ -17,12 +17,12 @@ apt-get update
 apt-get install -y curl
 
 if [ "$LATEST" = true ] ; then
-  echo 'Using NodeJS from $SETUP_URL'
+  echo "Using NodeJS from $SETUP_URL"
   curl -sL $SETUP_URL | bash -
   apt-get update
   apt-get install -y nodejs
 else
-  echo 'Building NodeJS version $NODE_VERSION'
+  echo "Building NodeJS version $NODE_VERSION"
   mkdir /tmp/nodejs
   cd /tmp/nodejs
   curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz"
