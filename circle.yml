@@ -52,8 +52,8 @@ deployment:
           VERSION=$(docker run $NV --version)
           MAJOR_VERSION=(${VERSION//./ })
           echo "Tagging as $CONTAINER_NAME:$VERSION"
-          docker tag $NV:latest $CONTAINER_NAME:$VERSION
+          docker tag -f $NV:latest $CONTAINER_NAME:$VERSION
           echo "Tagging as $CONTAINER_NAME:$MAJOR_VERSION"
-          docker tag $NV:latest $CONTAINER_NAME:$MAJOR_VERSION
+          docker tag -f $NV:latest $CONTAINER_NAME:$MAJOR_VERSION
         done
         docker push $CONTAINER_NAME
