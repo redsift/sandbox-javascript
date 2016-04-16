@@ -7,7 +7,7 @@ ARG nodev=4.x
 # Ecmascript version
 ARG esv=es6
 
-ENV NODE_VERSION ${nodev} SETUP_URL=https://deb.nodesource.com/setup_${nodev} ES_V=${esv}
+ENV NODE_VERSION=${nodev} SETUP_URL=https://deb.nodesource.com/setup_${nodev} ES_V=${esv}
 
 LABEL io.redsift.dagger.init="/usr/bin/redsift/install.js" io.redsift.dagger.run="/usr/bin/redsift/bootstrap.js"
 
