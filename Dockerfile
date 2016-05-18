@@ -9,6 +9,9 @@ ARG esv=es6
 
 ENV NODE_VERSION=${nodev} SETUP_URL=https://deb.nodesource.com/setup_${nodev} ES_V=${esv}
 
+# Set HOME temporarily to /root
+ENV HOME /root
+
 LABEL io.redsift.dagger.init="/usr/bin/redsift/install.js" io.redsift.dagger.run="/usr/bin/redsift/bootstrap.js"
 
 # Copy support files across
@@ -22,6 +25,11 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
   	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install any required NPM modules
-RUN cd /usr/bin/redsift && npm install && npm install nanomsg --use_system_libnanomsg=true && npm run $ES_V && rm -Rf node_modules/babel-cli node_modules/babel-preset-es2015 node_modules/jshint
+RUN cd /usr/bin/redsift && \
+  npm install && npm install nanomsg --use_system_libnanomsg=true && \
+	npm run $ES_V && rm -Rf node_modules/babel-cli node_modules/babel-preset-es2015 node_modules/jshint
+
+# Set HOME back to /home/sandbox
+ENV HOME /home/sandbox
 
 ENTRYPOINT [ "node" ]
