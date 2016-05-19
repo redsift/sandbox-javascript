@@ -1,11 +1,11 @@
 {
-  "name": "redsift-bootstrap",
+  "name": "redsift-run",
   "version": "1.1.0",
   "description": "Sets up the sandbox for NodeJS backend tasks",
   "scripts": {
-    "lint": "jshint --config .jshinrc bootstrap-es6.js",
-    "es5": "node node_modules/babel-cli/bin/babel.js bootstrap-es6.js -o bootstrap.js",
-    "es6": "cp bootstrap-es6.js bootstrap.js"
+    "lint": "jshint --config .jshinrc run-es6.js",
+    "es5": "node node_modules/babel-cli/bin/babel.js run-es6.js -o run.js",
+    "es6": "cp run-es6.js run.js"
   },
   "dependencies": {
   },

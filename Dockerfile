@@ -12,8 +12,7 @@ ENV NODE_VERSION=${nodev} SETUP_URL=https://deb.nodesource.com/setup_${nodev} ES
 # Set HOME temporarily to /root
 ENV HOME /root
 
-LABEL io.redsift.dagger.init="/usr/bin/redsift/install.js" io.redsift.dagger.run="/usr/bin/redsift/bootstrap.js"
-LABEL io.redsift.sandbox.install="/usr/bin/redsift/install.js" io.redsift.sandbox.run="/usr/bin/redsift/bootstrap.js"
+LABEL io.redsift.sandbox.install="/usr/bin/redsift/install.js" io.redsift.sandbox.run="/usr/bin/redsift/run.js"
 
 # Copy support files across
 COPY root /

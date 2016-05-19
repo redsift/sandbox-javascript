@@ -2,7 +2,7 @@
 root/usr/bin/redsift/node_modules/
 root/usr/bin/redsift/npm-debug.log
 
-root/usr/bin/redsift/bootstrap.js
+root/usr/bin/redsift/run.js
 
 test/npm-debug.log
 

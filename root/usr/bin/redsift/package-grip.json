@@ -1,5 +1,5 @@
 {
-  "name": "redsift-bootstrap",
+  "name": "redsift-grip",
   "version": "1.1.0",
   "description": "Sets up the sandbox for NodeJS backend tasks",
   "dependencies": {

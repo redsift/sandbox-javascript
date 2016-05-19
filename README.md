@@ -3,23 +3,23 @@
 
 # Filesystem Layout and API
 
-`SIFT_ROOT` Runs the sift made available in this path, defaults to `/run/dagger/sift`
-`IPC_ROOT` Uses Nanomsg req/rep sockets in this path, defaults to `/run/dagger/ipc`. Node ordinality is used as the identity e.g. the 1st node in the DAG comunicates over `/run/dagger/ipc/0.sock`
+`SIFT_ROOT` Runs the sift made available in this path, defaults to `/run/sandbox/sift`
+`IPC_ROOT` Uses Nanomsg req/rep sockets in this path, defaults to `/run/sandbox/ipc`. Node ordinality is used as the identity e.g. the 1st node in the DAG comunicates over `/run/sandbox/ipc/0.sock`
 
 # Docker launch
 
 `io.redsift.sandbox.install` CMD for one time install operations.
 `io.redsift.sandbox.run` CMD for run operations.
 
-Parameters are the node numbers you wish the bootstrap to init or execute.
+Parameters are the node numbers you wish the script to install or execute.
 
 # Running manually
 
 	docker run
-		-v <path-to-sift>:/run/dagger/sift
-		-v <path-to-ipcs>:/run/dagger/ipc
+		-v <path-to-sift>:/run/sandbox/sift
+		-v <path-to-ipcs>:/run/sandbox/ipc
 		quay.io/redsift/sandbox-javascript:v4.4.2
-		/usr/bin/redsift/bootstrap.js
+		/usr/bin/redsift/run.js
 		0 1 2
 
-`nn_req -X /run/dagger/ipc/0.sock -D "{\"dummy\":1}" --raw`
+`nn_req -X /run/sandbox/ipc/0.sock -D "{\"dummy\":1}" --raw`
