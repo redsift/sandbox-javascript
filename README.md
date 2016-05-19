@@ -8,16 +8,16 @@
 
 # Docker launch
 
-`io.redsift.dagger.init` CMD for one time init operations.
-`io.redsift.dagger.run` CMD for run operations.
+`io.redsift.sandbox.install` CMD for one time install operations.
+`io.redsift.sandbox.run` CMD for run operations.
 
 Parameters are the node numbers you wish the bootstrap to init or execute.
 
 # Running manually
 
-	docker run 
-		-v <path-to-sift>:/run/dagger/sift 
-		-v <path-to-ipcs>:/run/dagger/ipc 
+	docker run
+		-v <path-to-sift>:/run/dagger/sift
+		-v <path-to-ipcs>:/run/dagger/ipc
 		quay.io/redsift/sandbox-javascript:v4.4.2
 		/usr/bin/redsift/bootstrap.js
 		0 1 2

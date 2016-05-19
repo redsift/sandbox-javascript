@@ -30,11 +30,11 @@ test:
       set -e
       for NV in $NODEJS_VERSIONS
       do
-        INIT=$(docker inspect -f "{{index .ContainerConfig.Labels \"io.redsift.dagger.init\" }}" $NV)
+        INIT=$(docker inspect -f "{{index .ContainerConfig.Labels \"io.redsift.sandbox.install\" }}" $NV)
         echo "Calling init = $INIT"
         docker run -v $PWD/test:/run/dagger/sift $NV $INIT 0 2 3
         ls -A $PWD/test/server/node_modules $PWD/test/server-alt/node_modules
-        RUN=$(docker inspect -f "{{index .ContainerConfig.Labels \"io.redsift.dagger.run\" }}" $NV)
+        RUN=$(docker inspect -f "{{index .ContainerConfig.Labels \"io.redsift.sandbox.run\" }}" $NV)
         echo "Calling run = $RUN"
         docker run -v $PWD/test:/run/dagger/sift -e DRY=true $NV $RUN 0 2 3
         sudo rm -Rf $PWD/test/server/node_modules $PWD/test/server-alt/node_modules
