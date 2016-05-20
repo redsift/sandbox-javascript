@@ -15,7 +15,7 @@ Parameters are the node numbers you wish the script to install or execute.
 
 # Running manually
 
-	docker run
+	docker run -u 7438
 		-v <path-to-sift>:/run/sandbox/sift
 		-v <path-to-ipcs>:/run/sandbox/ipc
 		quay.io/redsift/sandbox-javascript:v4.4.2
