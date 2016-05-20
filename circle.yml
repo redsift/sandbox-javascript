@@ -28,6 +28,9 @@ test:
   override:
     - |
       set -e
+      sudo groupadd -g 7438 sandbox
+      sudo adduser --system --no-create-home --shell /bin/false -u 7438 -gid 7438 sandbox
+      sudo chown -R sandbox:sandbox ${PWD}
       for NV in $NODEJS_VERSIONS
       do
         INIT=$(docker inspect -f "{{index .Config.Labels \"io.redsift.sandbox.install\" }}" $NV)
