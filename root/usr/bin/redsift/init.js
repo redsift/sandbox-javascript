@@ -4,7 +4,7 @@ var fs = require('fs');
 var path = require('path');
 
 if (process.argv.length < 3) {
-    throw new Error('No nodes to execute');
+  throw new Error('No nodes to execute');
 }
 
 var nodes = process.argv.slice(2);
@@ -15,29 +15,29 @@ var IPC_ROOT = process.env.IPC_ROOT;
 var DRY = (process.env.DRY === 'true');
 
 if (!SIFT_ROOT) {
-    throw new Error('Environment SIFT_ROOT not set');
+  throw new Error('Environment SIFT_ROOT not set');
 }
 
 if (!path.isAbsolute(SIFT_ROOT)) {
-	throw new Error('Environment SIFT_ROOT "' + SIFT_ROOT + '" must be absolute');
+  throw new Error('Environment SIFT_ROOT "' + SIFT_ROOT + '" must be absolute');
 }
 
 if (!SIFT_JSON) {
-    throw new Error('Environment SIFT_JSON not set');
+  throw new Error('Environment SIFT_JSON not set');
 }
 
 if (!IPC_ROOT) {
-    throw new Error('Environment IPC_ROOT not set');
+  throw new Error('Environment IPC_ROOT not set');
 }
 
 if (DRY) {
-    console.log('Unit Test Mode');
+  console.log('Unit Test Mode');
 }
 
 var sift = JSON.parse(fs.readFileSync(path.join(SIFT_ROOT, SIFT_JSON), 'utf8'));
 
 if ((sift.dag === undefined) || (sift.dag.nodes === undefined)) {
-    throw new Error('Sift does not contain any nodes');
+  throw new Error('Sift does not contain any nodes');
 }
 
 module.exports = {

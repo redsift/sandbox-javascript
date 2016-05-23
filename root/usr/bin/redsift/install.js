@@ -25,7 +25,7 @@ var paths = sift.dag.nodes.map(function (n) {
 	if (n.implementation === undefined) {
 		return '';
 	}
-	
+
 	var js = n.implementation.javascript;
 	return path.join(SIFT_ROOT, path.dirname(js));
 });
@@ -49,32 +49,30 @@ var final = Object.keys(map).reduce(function (last, pathToInstall) {
 		console.log('Skipping', pathToInstall);
 		return last;
 	}
-	
+
 	if (file.isDirectory()) {
 		throw new Error('package.json is a directory in ' + pathToInstall);
 	}
-	
-	return last.then(function() {
+
+	return last.then(function () {
 		console.log('Performing npm install in', pathToInstall);
-		
-		return new Promise(function(ok, ko) {
+
+		return new Promise(function (resolve, reject) {
 			child.exec('npm install', { cwd: pathToInstall, maxBuffer: MAX_STDERR_BUFFER }, function (err, stdout, stderr) {
 				if (err) {
 					console.error(stderr);
-					ko('npm installed failed in ' + pathToInstall + ' exit code:' + err.code);
+					reject('npm installed failed in ' + pathToInstall + ' exit code:' + err.code);
 					return;
 				}
-				ok();
+				resolve();
 			});
 		});
 	});
 }, Promise.resolve());
-	
-final.then(function() {
+
+final.then(function () {
 	process.exit(0);
-}).catch(function(err) {
+}).catch(function (err) {
 	console.error(err);
 	process.exit(-1);
 });
-
-

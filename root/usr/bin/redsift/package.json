@@ -7,8 +7,7 @@
     "es5": "node node_modules/babel-cli/bin/babel.js run-es6.js -o run.js",
     "es6": "cp run-es6.js run.js"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-cli": "latest",
     "babel-preset-es2015": "latest",
