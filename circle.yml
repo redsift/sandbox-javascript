@@ -50,6 +50,7 @@ deployment:
       - docker login -e $QUAY_EMAIL -u $QUAY_USER -p $QUAY_PASS quay.io
       - |
         set -e
+        latest=""
         for NV in $NODEJS_VERSIONS
         do
           VERSION=$(docker run -u 7438:7438 $NV --version)
@@ -58,5 +59,8 @@ deployment:
           docker tag -f $NV:latest $CONTAINER_NAME:$VERSION
           echo "Tagging as $CONTAINER_NAME:$MAJOR_VERSION"
           docker tag -f $NV:latest $CONTAINER_NAME:$MAJOR_VERSION
+          latest=$NV:latest
         done
+        echo "Tagging $latest as $CONTAINER_NAME:latest"
+        docker tag $latest $CONTAINER_NAME:latest
         docker push $CONTAINER_NAME
