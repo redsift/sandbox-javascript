@@ -35,11 +35,11 @@ test:
       do
         INIT=$(docker inspect -f "{{index .Config.Labels \"io.redsift.sandbox.install\" }}" $NV)
         echo "Calling init = $INIT"
-        docker run -u 7438 -v $PWD/test:/run/sandbox/sift $NV $INIT 0 2 3
+        docker run -u 7438:7438 -v $PWD/test:/run/sandbox/sift $NV $INIT 0 2 3
         ls -A $PWD/test/server/node_modules $PWD/test/server-alt/node_modules
         RUN=$(docker inspect -f "{{index .Config.Labels \"io.redsift.sandbox.run\" }}" $NV)
         echo "Calling run = $RUN"
-        docker run -u 7438 -v $PWD/test:/run/sandbox/sift -e DRY=true $NV $RUN 0 2 3
+        docker run -u 7438:7438 -v $PWD/test:/run/sandbox/sift -e DRY=true $NV $RUN 0 2 3
         sudo rm -Rf $PWD/test/server/node_modules $PWD/test/server-alt/node_modules
       done
 
@@ -52,7 +52,7 @@ deployment:
         set -e
         for NV in $NODEJS_VERSIONS
         do
-          VERSION=$(docker run -u 7438 $NV --version)
+          VERSION=$(docker run -u 7438:7438 $NV --version)
           MAJOR_VERSION=(${VERSION//./ })
           echo "Tagging as $CONTAINER_NAME:$VERSION"
           docker tag -f $NV:latest $CONTAINER_NAME:$VERSION
