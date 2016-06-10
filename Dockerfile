@@ -26,7 +26,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 
 # Install any required NPM modules
 RUN cd /usr/bin/redsift && \
-  npm install && npm install nanomsg --use_system_libnanomsg=true && \
+  npm install && npm install nanomsg && \
 	npm run $ES_V && rm -Rf node_modules/babel-cli node_modules/babel-preset-es2015 node_modules/jshint
 
 # Set HOME back to /home/sandbox
