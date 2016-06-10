@@ -11,6 +11,9 @@ case "$NODE_VERSION" in
   5.x)
     LATEST=true
   ;;
+  6.x)
+    LATEST=true
+  ;;
 esac
 
 apt-get update
