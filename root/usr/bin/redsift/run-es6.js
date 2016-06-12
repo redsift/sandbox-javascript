@@ -64,6 +64,7 @@ nodes.forEach(function (i) {
       }
       rep = node(req);
     } catch (computeErr) {
+      console.error(computeErr.stack);
       var err = {
         message: computeErr.message,
         stack: computeErr.stack,
@@ -86,9 +87,15 @@ nodes.forEach(function (i) {
         reply.send(protocol.toEncodedMessage(value, diff));
       })
       .catch(function (error) {
+        console.error(error.stack);
+        var err = {
+          message: error.message,
+          stack: error.stack,
+          fileName: error.fileName,
+          lineNumber: error.lineNumber
+        };
         const diff = process.hrtime(start);
-        reply.send(JSON.stringify({ error: error, stats: { result: diff } }));
-        console.error(error);
+        reply.send(JSON.stringify({ error: err, stats: { result: diff } }));
       });
   });
 });
