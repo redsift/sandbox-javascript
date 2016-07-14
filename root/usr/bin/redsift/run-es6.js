@@ -31,7 +31,7 @@ nodes.forEach(function (i) {
   if (n === undefined ||
     n.implementation === undefined ||
     (n.implementation.javascript === undefined)) {
-    throw new Error('implementation not supported by boostrap at node #' + i);
+    throw new Error('implementation not supported by run at node #' + i);
   }
 
   one = true;

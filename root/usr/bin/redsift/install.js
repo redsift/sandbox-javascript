@@ -21,21 +21,19 @@ var sift = init.sift;
 
 // -------- Main
 
-var paths = sift.dag.nodes.map(function (n) {
-	if (n.implementation === undefined) {
-		return '';
-	}
-
-	var js = n.implementation.javascript;
-	return path.join(SIFT_ROOT, path.dirname(js));
-});
-
 var map = {};
 nodes.forEach(function (i) {
-	var js = paths[i];
-	if (js === undefined) {
+	var n = sift.dag.nodes[i];
+	if (n === undefined) {
 		throw new Error('Node #' + i + ' is not known');
 	}
+
+	if (n.implementation === undefined ||
+		n.implementation.javascript === undefined) {
+		throw new Error('implementation not supported by install at node #' + i);
+	}
+
+	var js = path.join(SIFT_ROOT, path.dirname(n.implementation.javascript));
 	map[js] = true;
 });
 
