@@ -24,7 +24,7 @@ function b64Decode(d) {
 }
 
 function b64Encode(i) {
-  if (i != null && i.value) {
+  if (i != null && i.value != null && i.value != undefined) {
     var str = i.value;
     if (!(typeof str === 'string' || str instanceof String) && !(str instanceof Buffer)) {
       str = JSON.stringify(i.value);
