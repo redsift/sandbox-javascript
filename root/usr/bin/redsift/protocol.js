@@ -52,14 +52,14 @@ function fromEncodedMessage(body) {
 }
 
 function toEncodedMessage(value, diff, decodeTime, nodeTime) {
-  const startEncode = process.hrtime();
+  var startEncode = process.hrtime();
   // if node() returns a Promise.all([...]), remove the nesting
   var flat = flattenNestedArrays(value);
   //console.log('REP-FLAT:', flat);
   flat.forEach(function (i) {
     i = b64Encode(i);
   });
-  const encodeTime = process.hrtime(startEncode);
+  var encodeTime = process.hrtime(startEncode);
   return JSON.stringify({ out: flat, stats: { result: diff, decode: decodeTime, node: nodeTime, encode: encodeTime } });
 }
 
