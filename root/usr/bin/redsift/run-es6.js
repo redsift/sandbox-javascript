@@ -53,9 +53,11 @@ nodes.forEach(function (i) {
   reply.rcvmaxsize(-1);
   reply.connect('ipc://' + path.join(IPC_ROOT, i + '.sock'));
   reply.on('data', function (msg) {
+    const start = process.hrtime();
     let req = protocol.fromEncodedMessage(JSON.parse(msg));
     // console.log('REQ:', req);
-    const start = process.hrtime();
+    const decodeTime = process.hrtime(start);
+    const startNode = process.hrtime();
 
     var rep = null;
     try {
@@ -83,8 +85,9 @@ nodes.forEach(function (i) {
     Promise.all(rep)
       .then(function (value) {
         //console.log('REP-VALUE:', value);
+        const nodeTime = process.hrtime(startNode);
         const diff = process.hrtime(start);
-        reply.send(protocol.toEncodedMessage(value, diff));
+        reply.send(protocol.toEncodedMessage(value, diff, decodeTime, nodeTime));
       })
       .catch(function (error) {
         console.error(error.stack);
