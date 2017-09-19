@@ -48,6 +48,12 @@ function fromEncodedMessage(body) {
     });
   }
 
+  if ('get' in body) {
+    body.get.forEach(function (g) {
+      g = b64Decode(g);
+    });
+  }
+
   return body;
 }
 
