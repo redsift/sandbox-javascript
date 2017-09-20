@@ -22,7 +22,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 		/usr/bin/redsift/setup-nodejs && \
 	  apt-get install -y build-essential git \
   		libpython-stdlib libpython2.7-minimal libpython2.7-stdlib mime-support python python-minimal python2.7 python2.7-minimal python-pip && \
-  	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+  	apt-get purge -y && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install any required NPM modules
 RUN cd /usr/bin/redsift && \
