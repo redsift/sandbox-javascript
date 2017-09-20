@@ -1,7 +1,7 @@
 machine:
   environment:
     CONTAINER_NAME: quay.io/redsift/sandbox-javascript
-    NODEJS_VERSIONS: 4.4.7 6.2.2 6.11.1 4.x 6.x
+    NODEJS_VERSIONS: 4.8.4 6.2.2 6.11.1 4.x 6.x
   pre:
     - sudo curl -L -o /usr/bin/docker 'https://s3-external-1.amazonaws.com/circle-downloads/docker-1.9.0-circleci'
     - sudo chmod 0755 /usr/bin/docker
