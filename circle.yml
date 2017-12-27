@@ -1,7 +1,7 @@
 machine:
   environment:
     CONTAINER_NAME: quay.io/redsift/sandbox-javascript
-    NODEJS_VERSIONS: 4.8.4 6.2.2 6.11.1 4.x 6.x
+    NODEJS_VERSIONS: 8.9.3
     CIRCLE_REVERSE_DEPENDENCIES: sandbox-dmarc-insights
   pre:
     - sudo curl -L -o /usr/bin/docker 'https://s3-external-1.amazonaws.com/circle-downloads/docker-1.9.0-circleci'
@@ -16,14 +16,8 @@ dependencies:
       set -e
       for NV in $NODEJS_VERSIONS
       do
-        ESV=es6
-        case "$NV" in
-          0.12*)
-          ESV=es5
-          ;;
-        esac
         echo "Building $NV"
-        docker build --build-arg nodev=$NV --build-arg esv=$ESV -t $NV .
+        docker build --build-arg nodev=$NV -t $NV .
       done
 
 test:
