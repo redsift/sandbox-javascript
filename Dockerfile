@@ -40,4 +40,6 @@ RUN cd /usr/bin/redsift && \
   npm install && npm install nanomsg@4.0.0 && \
 	npm run es6 && rm -Rf node_modules/babel-cli node_modules/babel-preset-es2015 node_modules/jshint
 
+RUN chown -R sandbox:sandbox $HOME
+
 ENTRYPOINT [ "node" ]
