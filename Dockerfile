@@ -2,7 +2,7 @@ FROM quay.io/redsift/sandbox:latest
 MAINTAINER Rahul Powar email: rahul@redsift.io version: 1.1.101
 
 # nodev specifies node version
-ARG nodev=8.9.3
+ARG nodev=8.9.4
 LABEL io.redsift.sandbox.install="/usr/bin/redsift/install.js" io.redsift.sandbox.run="/usr/bin/redsift/run.js"
 
 # Copy support files across
