@@ -2,7 +2,7 @@
 set -eu
 
 NV=$1
-groupadd -g 7438 sandbox
+addgroup -g 7438 sandbox
 adduser --system --no-create-home --shell /bin/false -u 7438 -gid 7438 sandbox
 chown -R sandbox:sandbox ${PWD}
 
