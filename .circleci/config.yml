@@ -1,0 +1,106 @@
+version: 2.1
+
+default:
+  environment: &envvars
+    CONTAINER_NAME: quay.io/redsift/sandbox-javascript
+    CIRCLE_REVERSE_DEPENDENCIES: sandbox-dmarc-insights
+executors:
+  dockexec:
+    shell: /bin/sh
+    environment: *envvars
+    docker:
+      - image: docker:18.09.3
+
+  baseexec:
+    shell: /bin/bash
+    environment: *envvars
+    docker:
+      - image: cibuilds/base:2019.03
+
+
+commands:
+  v_build:
+    parameters:
+      nv:
+        type: string
+        default: "8.10.0"
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: docker login -u $QUAY_USER -p $QUAY_PASS quay.io
+      - run: echo Building << parameters.nv >>
+      - run: docker build --build-arg nodev=<< parameters.nv >> -t << parameters.nv >> .
+      - run: ./circle/docker_test << parameters.nv >>
+      - tagging:
+          tag: << parameters.nv >>
+
+  tagging:
+    parameters:
+      beta:
+        type: boolean
+        default: true
+      tag:
+        type: string
+      islatest:
+        type: boolean
+        default: false
+    steps:
+      - run: export VERSION=$(docker run -u 7438:7438 $NV --version)
+      - run: export MAJOR_VERSION=(${VERSION//./ })
+      - run: echo "Tagging as $CONTAINER_NAME:<< parameters.tag >>"<<# parameters.beta >>-beta<</ parameters.beta >>
+      - run: docker tag sandbox:latest "$CONTAINER_NAME:"<< parameters.tag >><<# parameters.beta >>-beta<</ parameters.beta >>
+
+  build_all_versions:
+    parameters:
+      beta:
+        type: boolean
+        default: true
+      islatest:
+        type: boolean
+        default: false
+    steps:
+      - v_build:
+          nv: "8.10.0"
+
+jobs:
+  build:
+    executor: dockexec
+    steps:
+      - build_all_versions
+
+  build-release:
+    executor: dockexec
+    steps:
+      - build_all_versions:
+          beta: false
+      - tagging:
+          tag: "latest"
+          beta: false
+
+  trigger-builds:
+    executor: baseexec
+    steps:
+      - checkout
+      - run: ./circle_ci_trigger_build
+
+workflows:
+  version: 2.1
+  build-and-deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore:
+                - /release-.*/
+      - trigger-builds:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
+      - build-release:
+          filters:
+            branches:
+              only:
+                - /release-.*/
