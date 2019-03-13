@@ -9,8 +9,8 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "babel-cli": "latest",
-    "babel-preset-es2015": "latest",
+    "@babel/cli": "latest",
+    "@babel/preset-env": "latest",
     "jshint": "latest"
   },
   "private": true
