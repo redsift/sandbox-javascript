@@ -15,12 +15,8 @@ chown -R sandbox:sandbox ${PWD}
 
 INIT=$(docker inspect -f "{{index .Config.Labels \"io.redsift.sandbox.install\" }}" $NV)
 echo "Calling init = $INIT"
-ls -al "${PWD}/test"
-docker run -u 7438:7438 --entrypoint=/bin/bash $NV-testing -c "ls -al /run/sandbox/sift"
-docker run -u 7438:7438 $NV-testing $INIT 0 2 3
-ls -A "${PWD}/test/server/node_modules" "${PWD}/test/server-alt/node_modules"
+docker run -u 7438:7438 $NV-testing $INIT 0 2 3 ; ls -A "./server/node_modules" "./server-alt/node_modules"
 
 RUN=$(docker inspect -f "{{index .Config.Labels \"io.redsift.sandbox.run\" }}" $NV)
 echo "Calling run = $RUN"
 docker run -u 7438:7438 -v "${PWD}/test:/run/sandbox/sift:ro" -e DRY=true $NV-testing $RUN 0 2 3
-rm -Rf "${PWD}/test/server/node_modules" "${PWD}/test/server-alt/node_modules"
