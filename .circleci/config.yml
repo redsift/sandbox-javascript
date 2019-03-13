@@ -27,11 +27,12 @@ commands:
     steps:
       - checkout
       - setup_remote_docker
+      - run: export NV=<< parameters.nv >>
       - run: docker login -u $QUAY_USER -p $QUAY_PASS quay.io
-      - run: echo Building << parameters.nv >>
-      - run: docker build --build-arg nodev=<< parameters.nv >> -t << parameters.nv >> .
-      - run: docker build -t << parameters.nv >>-testing -f Dockerfile.testing .
-      - run: ./circleci/docker_test << parameters.nv >>
+      - run: echo Building $NV
+      - run: docker build --build-arg nodev=$NV -t $NV .
+      - run: docker build -t $NV-testing -f Dockerfile.testing .
+      - run: ./circleci/docker_test $NV
       - tagging:
           tag: << parameters.nv >>
 
