@@ -1,4 +1,4 @@
 FROM 8.10.0:latest
 MAINTAINER Christos Vontas email: christos@redsift.io version: 1.0.1
 
-COPY --chown 7438:7438 test /run/sandbox/sift
+COPY --chown=7438:7438 test /run/sandbox/sift
