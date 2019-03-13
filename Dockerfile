@@ -38,7 +38,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 # Install any required NPM modules
 RUN cd /usr/bin/redsift && \
   npm install && npm install nanomsg@4.0.2 && \
-	npm run es6 && rm -Rf node_modules/babel-cli node_modules/babel-preset-es2015 node_modules/jshint
+	npm run es6 && rm -Rf node_modules/\@babel/* node_modules/jshint
 
 RUN chown -R sandbox:sandbox $HOME
 
