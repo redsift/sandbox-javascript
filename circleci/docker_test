@@ -15,6 +15,7 @@ chown -R sandbox:sandbox ${PWD}
 
 INIT=$(docker inspect -f "{{index .Config.Labels \"io.redsift.sandbox.install\" }}" $NV)
 echo "Calling init = $INIT"
+echo "PWD=${PWD}"
 docker run -u 7438:7438 -v $PWD/test:/run/sandbox/sift $NV $INIT 0 2 3
 ls -A $PWD/test/server/node_modules $PWD/test/server-alt/node_modules
 
