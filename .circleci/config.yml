@@ -9,7 +9,7 @@ executors:
     shell: /bin/sh
     environment: *envvars
     docker:
-      - image: docker:18.09.3
+      - image: docker:18.06.3-ce
 
   baseexec:
     shell: /bin/bash
