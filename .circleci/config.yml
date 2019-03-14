@@ -38,8 +38,12 @@ commands:
       - run: docker build --build-arg nodev=<< parameters.nv >> -t << parameters.nv >> .
       - run: docker build -t << parameters.nv >>-testing -f Dockerfile.testing .
       - run: ./circleci/docker_test << parameters.nv >>
-      - run: ./circleci/docker_tagging << parameters.nv >> <<# parameters.prod >>prod<</ parameters.prod >> <<# parameters.islatest >>latest<</ parameters.islatest >>
-
+      - run: ./circleci/docker_tagging << parameters.nv >> <<# parameters.prod >>prod<</ parameters.prod >>
+      - when:
+          condition: << parameters.islatest >>
+          steps:
+            - run: echo "Tagging as $CONTAINER_NAME:latest"
+            - run: docker tag << parameters.nv >> $CONTAINER_NAME:latest
 
   build_all_versions:
     parameters:
@@ -50,7 +54,7 @@ commands:
       - v_build:
           nv: "8.10.0"
           prod: << parameters.prod >>
-          islatest: true
+          islatest: << parameters.prod >>
 
 jobs:
   build:
