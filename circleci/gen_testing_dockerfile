@@ -2,9 +2,10 @@
 set -eu
 
 NV=$1
+SHA1=${CIRCLE_SHA1:0:7}
 
 cat << EOF > ./Dockerfile.testing
-FROM ${NV}:latest
+FROM ${NV}:${SHA1}
 MAINTAINER Christos Vontas email: christos@redsift.io version: 1.0.1
 
 COPY --chown=7438:7438 test /run/sandbox/sift
