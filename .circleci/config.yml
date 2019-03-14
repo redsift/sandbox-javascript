@@ -37,6 +37,8 @@ commands:
       - run: docker build -t << parameters.nv >>-testing -f Dockerfile.testing .
       - run: ./circleci/docker_test << parameters.nv >>
       - run: ./circleci/docker_tagging << parameters.nv >> << parameters.islatest >>
+      - deploy:
+          command: docker push $CONTAINER_NAME
 
 jobs:
   build_default:
