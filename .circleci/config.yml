@@ -24,6 +24,12 @@ commands:
       nv:
         type: string
         default: "8.10.0"
+      prod:
+        type: boolean
+        default: false
+      islatest:
+        type: boolean
+        default: false
     steps:
       - checkout
       - setup_remote_docker
@@ -32,21 +38,8 @@ commands:
       - run: docker build --build-arg nodev=<< parameters.nv >> -t << parameters.nv >> .
       - run: docker build -t << parameters.nv >>-testing -f Dockerfile.testing .
       - run: ./circleci/docker_test << parameters.nv >>
-      - tagging:
-          tag: << parameters.nv >>
+      - run: ./circleci/docker_tagging << parameters.nv >> <<# parameters.prod >>prod<</ parameters.prod >> <<# parameters.islatest >>latest<</ parameters.islatest >>
 
-  tagging:
-    parameters:
-      prod:
-        type: boolean
-        default: false
-      tag:
-        type: string
-      islatest:
-        type: boolean
-        default: false
-    steps:
-      - run: ./circleci/docker_tagging << parameters.tag >> <<# parameters.prod >>prod<</ parameters.prod >> <<# parameters.islatest >>latest<</ parameters.islatest >>
 
   build_all_versions:
     parameters:
