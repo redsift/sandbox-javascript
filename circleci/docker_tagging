@@ -1,0 +1,21 @@
+#!/bin/bash
+set -eu
+
+NV=$1
+SUFFIX=${2:+"-beta"}
+IS_LATEST=${3:-}
+
+VERSION=$(docker run -u 7438:7438 $NV --version)
+V_TAG=$CONTAINER_NAME:$VERSION$SUFFIX
+echo "Tagging as $V_TAG"
+docker tag $NV $V_TAG
+
+MAJOR_VERSION=(${VERSION//./ })
+MV_TAG=$CONTAINER_NAME:$MAJOR_VERSION$SUFFIX
+echo "Tagging as $MV_TAG"
+docker tag $NV $MV_TAG
+
+if [ SUFFIX != "-beta" ] && [ IS_LATEST == "latest" ]; then
+    echo "Tagging as $CONTAINER_NAME:latest"
+    docker tag $NV $CONTAINER_NAME:latest
+fi

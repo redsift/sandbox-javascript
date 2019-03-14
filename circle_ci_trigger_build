@@ -4,6 +4,6 @@ repoList=( $CIRCLE_REVERSE_DEPENDENCIES )
 
 for repo in "${repoList[@]}"
 do
-	echo Triggering CI build $repo && \
+	echo Triggering CI build $repo
 	# curl -v -X POST https://circleci.com/api/v1/project/redsift/$repo/tree/master?circle-token=$CIRCLE_TOKEN
 done

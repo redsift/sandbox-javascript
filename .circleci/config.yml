@@ -37,35 +37,27 @@ commands:
 
   tagging:
     parameters:
-      beta:
+      prod:
         type: boolean
-        default: true
+        default: false
       tag:
         type: string
       islatest:
         type: boolean
         default: false
     steps:
-      - run: export VERSION=$(docker run -u 7438:7438 << parameters.tag >> --version)
-      - run: export MAJOR_VERSION=(${VERSION//./ })
-      - run: export V_TAG=$CONTAINER_NAME:$VERSION<<# parameters.beta >>-beta<</ parameters.beta >>
-      - run: echo "Tagging as $V_TAG"
-      - run: docker tag << parameters.tag >> $V_TAG
-      - run: export MV_TAG=$CONTAINER_NAME:$MAJOR_VERSION<<# parameters.beta >>-beta<</ parameters.beta >>
-      - run: echo "Tagging as $MV_TAG"
-      - run: docker tag << parameters.tag >> $MV_TAG
+      - run: ./circleci/docker_tagging << parameters.tag >> <<# parameters.prod >>prod<</ parameters.prod >> <<# parameters.islatest >>latest<</ parameters.islatest >>
 
   build_all_versions:
     parameters:
-      beta:
-        type: boolean
-        default: true
-      islatest:
+      prod:
         type: boolean
         default: false
     steps:
       - v_build:
           nv: "8.10.0"
+          prod: << parameters.prod >>
+          islatest: true
 
 jobs:
   build:
@@ -77,10 +69,7 @@ jobs:
     executor: dockexec
     steps:
       - build_all_versions:
-          beta: false
-      - tagging:
-          tag: "latest"
-          beta: false
+          prod: true
 
   trigger-builds:
     executor: baseexec
