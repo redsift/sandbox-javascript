@@ -46,15 +46,19 @@ commands:
             - run: docker tag << parameters.nv >> $CONTAINER_NAME:latest
 
   build_all_versions:
+    parallelism: 2
     parameters:
       isrelease:
         type: boolean
         default: false
     steps:
       - v_build:
-          nv: "8.10.0"
+          nv: "8.15.1"
           isrelease: << parameters.isrelease >>
           islatest: << parameters.isrelease >>
+      - v_build:
+          nv: "8.10.0"
+          isrelease: << parameters.isrelease >>
 
 jobs:
   build:
