@@ -24,7 +24,7 @@ commands:
       nv:
         type: string
         default: "8.10.0"
-      prod:
+      isrelease:
         type: boolean
         default: false
       islatest:
@@ -38,7 +38,7 @@ commands:
       - run: docker build --build-arg nodev=<< parameters.nv >> -t << parameters.nv >> .
       - run: docker build -t << parameters.nv >>-testing -f Dockerfile.testing .
       - run: ./circleci/docker_test << parameters.nv >>
-      - run: ./circleci/docker_tagging << parameters.nv >> <<# parameters.prod >>prod<</ parameters.prod >>
+      - run: ./circleci/docker_tagging << parameters.nv >> <<# parameters.isrelease >>release<</ parameters.isrelease >>
       - when:
           condition: << parameters.islatest >>
           steps:
@@ -47,14 +47,14 @@ commands:
 
   build_all_versions:
     parameters:
-      prod:
+      isrelease:
         type: boolean
         default: false
     steps:
       - v_build:
           nv: "8.10.0"
-          prod: << parameters.prod >>
-          islatest: << parameters.prod >>
+          isrelease: << parameters.isrelease >>
+          islatest: << parameters.isrelease >>
 
 jobs:
   build:
@@ -66,7 +66,7 @@ jobs:
     executor: dockexec
     steps:
       - build_all_versions:
-          prod: true
+          isrelease: true
 
   trigger-builds:
     executor: baseexec
