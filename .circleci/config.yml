@@ -46,10 +46,10 @@ commands:
         type: boolean
         default: false
     steps:
-      - run: export VERSION=$(docker run -u 7438:7438 << parameters.tag >> --version)
-      - run: export MAJOR_VERSION=(${VERSION//./ })
+      - run: export VERSION=$(docker run -u 7438:7438 << parameters.tag >> --version); echo $VERSION
+      - run: export MAJOR_VERSION=(${VERSION//./ }); echo $MAJOR_VERSION
       - run: echo "Tagging as $CONTAINER_NAME:<< parameters.tag >>"<<# parameters.beta >>-beta<</ parameters.beta >>
-      - run: docker tag sandbox:latest "$CONTAINER_NAME:"<< parameters.tag >><<# parameters.beta >>-beta<</ parameters.beta >>
+      - run: docker tag << parameters.tag >> $CONTAINER_NAME:<< parameters.tag >><<# parameters.beta >>-beta<</ parameters.beta >>
 
   build_all_versions:
     parameters:
