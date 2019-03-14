@@ -39,7 +39,7 @@ commands:
       - run: ./circleci/docker_tagging << parameters.nv >> << parameters.islatest >>
 
 jobs:
-  build:
+  build_default:
     executor: dockexec
     steps:
       - v_build:
@@ -62,11 +62,11 @@ workflows:
   version: 2.1
   build-and-deploy:
     jobs:
-      - build
+      - build_default
       - build_8-15
       - trigger-builds:
           requires:
-            - build
+            - build_default
           filters:
             branches:
               only:
