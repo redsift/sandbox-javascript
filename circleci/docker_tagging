@@ -8,10 +8,10 @@ imageName=$NV:$SHA1
 
 CIRCLE_BRANCH=${CIRCLE_BRANCH/\//-} # fix/sth => fix-sth
 tagName=(${CIRCLE_BRANCH/-/ }) # release-1 => release
+SUFFIX="-beta"
 if [ $tagName == "release" ]; then
-  tagName=""
+  SUFFIX=""
 fi
-SUFFIX=${tagName:+"-beta"}
 
 VERSION=$(docker run -u 7438:7438 $imageName --version)
 V_TAG=$CONTAINER_NAME:$VERSION$SUFFIX
