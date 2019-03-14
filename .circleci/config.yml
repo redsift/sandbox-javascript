@@ -24,9 +24,6 @@ commands:
       nv:
         type: string
         default: "8.10.0"
-      isrelease:
-        type: boolean
-        default: false
       islatest:
         type: boolean
         default: false
@@ -38,39 +35,34 @@ commands:
       - run: docker build --build-arg nodev=<< parameters.nv >> -t << parameters.nv >> .
       - run: docker build -t << parameters.nv >>-testing -f Dockerfile.testing .
       - run: ./circleci/docker_test << parameters.nv >>
-      - run: ./circleci/docker_tagging << parameters.nv >> <<# parameters.isrelease >>release<</ parameters.isrelease >>
+      - run: ./circleci/docker_tagging << parameters.nv >>
       - when:
           condition: << parameters.islatest >>
           steps:
             - run: echo "Tagging as $CONTAINER_NAME:latest"
             - run: docker tag << parameters.nv >> $CONTAINER_NAME:latest
 
-  build_all_versions:
+jobs:
+  build:
     parallelism: 2
-    parameters:
-      isrelease:
-        type: boolean
-        default: false
+    executor: dockexec
     steps:
       - v_build:
           nv: "8.15.1"
-          isrelease: << parameters.isrelease >>
-          islatest: << parameters.isrelease >>
       - v_build:
           nv: "8.10.0"
-          isrelease: << parameters.isrelease >>
-
-jobs:
-  build:
-    executor: dockexec
-    steps:
-      - build_all_versions
 
   build-release:
     executor: dockexec
+    environment:
+      IS_RELEASE: true
     steps:
-      - build_all_versions:
-          isrelease: true
+      steps:
+      - v_build:
+          nv: "8.15.1"
+          islatest: true
+      - v_build:
+          nv: "8.10.0"
 
   trigger-builds:
     executor: baseexec
