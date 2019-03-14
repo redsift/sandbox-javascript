@@ -45,7 +45,7 @@ jobs:
       - v_build:
           nv: "8.10.0"
 
-  build_8.15:
+  build_8-15:
     executor: dockexec
     steps:
       - v_build:
@@ -63,7 +63,7 @@ workflows:
   build-and-deploy:
     jobs:
       - build
-      - build_8.15
+      - build_8-15
       - trigger-builds:
           requires:
             - build
