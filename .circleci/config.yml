@@ -36,33 +36,21 @@ commands:
       - run: ./circleci/gen_testing_dockerfile << parameters.nv >>
       - run: docker build -t << parameters.nv >>-testing -f Dockerfile.testing .
       - run: ./circleci/docker_test << parameters.nv >>
-      - run: ./circleci/docker_tagging << parameters.nv >>
-      - when:
-          condition: << parameters.islatest >>
-          steps:
-            - run: echo "Tagging as $CONTAINER_NAME:latest"
-            - run: docker tag << parameters.nv >> $CONTAINER_NAME:latest
+      - run: ./circleci/docker_tagging << parameters.nv >> << parameters.islatest >>
 
 jobs:
   build:
-    parallelism: 2
     executor: dockexec
     steps:
-      - v_build:
-          nv: "8.15.1"
       - v_build:
           nv: "8.10.0"
 
-  build-release:
+  build_8.15:
     executor: dockexec
-    environment:
-      IS_RELEASE: true
     steps:
       - v_build:
-          nv: "8.15.1"
+          nv: "8.15.0"
           islatest: true
-      - v_build:
-          nv: "8.10.0"
 
   trigger-builds:
     executor: baseexec
@@ -74,11 +62,8 @@ workflows:
   version: 2.1
   build-and-deploy:
     jobs:
-      - build:
-          filters:
-            branches:
-              ignore:
-                - /release-.*/
+      - build
+      - build_8.15
       - trigger-builds:
           requires:
             - build
@@ -86,8 +71,3 @@ workflows:
             branches:
               only:
                 - master
-      - build-release:
-          filters:
-            branches:
-              only:
-                - /release-.*/
