@@ -33,6 +33,7 @@ commands:
       - run: docker login -u $QUAY_USER -p $QUAY_PASS quay.io
       - run: echo Building << parameters.nv >>
       - run: docker build --build-arg nodev=<< parameters.nv >> -t << parameters.nv >> .
+      - run: ./circleci/gen_testing_dockerfile << parameters.nv >>
       - run: docker build -t << parameters.nv >>-testing -f Dockerfile.testing .
       - run: ./circleci/docker_test << parameters.nv >>
       - run: ./circleci/docker_tagging << parameters.nv >>
