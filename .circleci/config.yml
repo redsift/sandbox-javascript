@@ -31,9 +31,13 @@ commands:
       - checkout
       - setup_remote_docker
       - run: docker login -u $QUAY_USER -p $QUAY_PASS quay.io
-      - run: ./circleci/docker_build << parameters.nv >> << parameters.islatest >>
-      - run: ./circleci/gen_testing_dockerfile << parameters.nv >>
-      - run: ./circleci/docker_test << parameters.nv >>
+      - run: ./circle/docker_build << parameters.nv >> << parameters.islatest >>
+      - run: ./circle/gen_testing_dockerfile << parameters.nv >>
+      - run: ./circle/docker_test << parameters.nv >>
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - circle
       - deploy:
           command: docker push $CONTAINER_NAME
 
@@ -53,8 +57,9 @@ jobs:
   trigger-builds:
     executor: baseexec
     steps:
-      - checkout
-      - run: ./circle_ci_trigger_build
+      - attach_workspace:
+          at: /
+      - run: /circle/trigger_build
 
 workflows:
   version: 2.1
