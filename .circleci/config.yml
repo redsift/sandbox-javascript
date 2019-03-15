@@ -34,6 +34,8 @@ commands:
       - run: ./circleci/docker_build << parameters.nv >> << parameters.islatest >>
       - run: ./circleci/gen_testing_dockerfile << parameters.nv >>
       - run: ./circleci/docker_test << parameters.nv >>
+      - deploy:
+          command: docker push $CONTAINER_NAME
 
 jobs:
   build_default:
