@@ -41,13 +41,12 @@ jobs:
     steps:
       - v_build:
           nv: "8.10.0"
+          islatest: true
 
-  build_8-15:
+  build_placeholder:
     executor: dockexec
     steps:
-      - v_build:
-          nv: "8.15.0"
-          islatest: true
+      - run: echo "Create a job for each extra version with the command defined above"
 
   trigger-builds:
     executor: baseexec
@@ -60,7 +59,7 @@ workflows:
   build-and-deploy:
     jobs:
       - build_default
-      - build_8-15
+      - build_placeholder
       - trigger-builds:
           requires:
             - build_default
