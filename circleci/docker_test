@@ -2,21 +2,25 @@
 set -eu
 
 NV=$1
+imageName=$NV-testing
 # ubuntu version
 # sudo groupadd -g 7438 sandbox
 # alpine version
-addgroup -g 7438 sandbox
+# addgroup -g 7438 sandbox
 
 # ubuntu version
 # sudo adduser --system --no-create-home --shell /bin/false -u 7438 -gid 7438 sandbox
 # alpine version
-adduser -S -H -s /bin/false -u 7438 -g sandbox -G sandbox sandbox
-chown -R sandbox:sandbox ${PWD}
+# adduser -S -H -s /bin/false -u 7438 -g sandbox -G sandbox sandbox
+# chown -R sandbox:sandbox ${PWD}
 
-INIT=$(docker inspect -f "{{index .Config.Labels \"io.redsift.sandbox.install\" }}" $NV-testing)
+echo "Building testing image: $imageName"
+docker build -t $imageName -f Dockerfile.testing .
+
+INIT=$(docker inspect -f "{{index .Config.Labels \"io.redsift.sandbox.install\" }}" $imageName)
 echo "Calling init = $INIT"
-docker run -u 7438:7438 $NV-testing $INIT 0 2 3
+docker run -u 7438:7438 $imageName $INIT 0 2 3
 
-RUN=$(docker inspect -f "{{index .Config.Labels \"io.redsift.sandbox.run\" }}" $NV-testing)
+RUN=$(docker inspect -f "{{index .Config.Labels \"io.redsift.sandbox.run\" }}" $imageName)
 echo "Calling run = $RUN"
-docker run -u 7438:7438 -e DRY=true $NV-testing $RUN 0 2 3
+docker run -u 7438:7438 -e DRY=true $imageName $RUN 0 2 3

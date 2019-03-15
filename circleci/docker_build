@@ -1,10 +1,8 @@
 #!/bin/bash
 set -eu
 
-SHA1=${CIRCLE_SHA1:0:7}
 NV=$1
 IS_LATEST=${2:-}
-imageName=$NV:$SHA1
 
 CIRCLE_BRANCH=${CIRCLE_BRANCH/\//-} # fix/sth => fix-sth
 tagName=(${CIRCLE_BRANCH/-/ }) # release-1 => release
@@ -12,12 +10,12 @@ SUFFIX="-beta"
 if [ $tagName == "release" ]; then
   SUFFIX=""
 fi
+imageName=$CONTAINER_NAME:v$NV$SUFFIX
+
+echo Building $imageName
+docker build --build-arg nodev=$NV -t $imageName .
 
 VERSION=$(docker run -u 7438:7438 $imageName --version)
-V_TAG=$CONTAINER_NAME:$VERSION$SUFFIX
-echo "Tagging as $V_TAG"
-docker tag $imageName $V_TAG
-
 MAJOR_VERSION=(${VERSION//./ })
 MV_TAG=$CONTAINER_NAME:$MAJOR_VERSION$SUFFIX
 echo "Tagging as $MV_TAG"
