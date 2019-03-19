@@ -42,12 +42,6 @@ function fromEncodedMessage(body) {
     }
   });
 
-  if ('lookup' in body) {
-    body.lookup.forEach(function (l) {
-      l = b64Decode(l);
-    });
-  }
-
   if ('get' in body) {
     body.get.forEach(function (g) {
       g = b64Decode(g);
