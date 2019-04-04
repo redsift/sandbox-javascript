@@ -23,7 +23,7 @@ MV_TAG=$CONTAINER_NAME:v$MAJOR_VERSION$SUFFIX
 echo "Tagging as $MV_TAG"
 docker tag $imageName $MV_TAG
 
-if [[ "$tagName" == "release" ]] && [[ -n "$IS_LATEST" ]]; then
+if [[ "$tagName" == "release" ]] && [[ "$IS_LATEST" == "true" ]]; then
   echo "Tagging as $CONTAINER_NAME:latest"
   docker tag $imageName $CONTAINER_NAME:latest
 fi
