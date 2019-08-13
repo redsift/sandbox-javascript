@@ -21,7 +21,7 @@ var sift = init.sift;
 
 // -------- Main
 
-if(process.env.NPM_TOKEN.length > 0) {
+if (process.env.NPM_TOKEN && process.env.NPM_TOKEN.length > 0) {
 	try{
 		fs.writeFileSync('/home/sandbox/.npmrc', process.env.NPM_TOKEN, {flag: 'a'})
 	}catch(e){
