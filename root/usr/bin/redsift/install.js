@@ -21,6 +21,14 @@ var sift = init.sift;
 
 // -------- Main
 
+if(process.env.NPM_TOKEN.length > 0) {
+	try{
+		fs.writeFileSync('/home/sandbox/.npmrc', process.env.NPM_TOKEN, {flag: 'a'})
+	}catch(e){
+		throw new Error('failed to populate ~/.npmrc with NPM_TOKEN var')
+	}
+}
+
 var map = {};
 nodes.forEach(function (i) {
 	var n = sift.dag.nodes[i];
