@@ -12,6 +12,13 @@ ENV NVM_VERSION 0.33.8
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_VERSION=${nodev}
 
+# Install a minimal git + python + build tools as npm and node-gyp often needs it for modules
+RUN export DEBIAN_FRONTEND=noninteractive && \
+    apt-get update && \
+    apt-get install -y build-essential git \
+    libpython-stdlib libpython2.7-minimal libpython2.7-stdlib mime-support python python-minimal python2.7 python2.7-minimal python-pip && \
+    apt-get purge -y && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 # Install nvm with node and npm
 RUN curl https://raw.githubusercontent.com/creationix/nvm/v$NVM_VERSION/install.sh | bash \
 		&& . $NVM_DIR/nvm.sh \
@@ -27,17 +34,10 @@ RUN \
 	echo "NodeJS" `node -v` && \
 	echo "NPM" `npm -v`
 
-# Install a minimal git + python + build tools as npm and node-gyp often needs it for modules
-RUN export DEBIAN_FRONTEND=noninteractive && \
-		apt-get update && \
-	  apt-get install -y build-essential git \
-  		libpython-stdlib libpython2.7-minimal libpython2.7-stdlib mime-support python python-minimal python2.7 python2.7-minimal python-pip && \
-  	apt-get purge -y && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
 # Install any required NPM modules
 RUN cd /usr/bin/redsift && \
-  npm install && npm install nanomsg@4.0.2 && \
-	npm run es6 && rm -Rf node_modules/\@babel/* node_modules/jshint
+    npm install && npm install nanomsg@4.0.2 && \
+    npm run es6 && rm -Rf node_modules/\@babel/* node_modules/jshint
 
 RUN chown -R sandbox:sandbox $HOME
 
