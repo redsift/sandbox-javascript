@@ -8,7 +8,7 @@ LABEL io.redsift.sandbox.install="/usr/bin/redsift/install.js" io.redsift.sandbo
 # Copy support files across
 COPY root /
 
-ENV NVM_VERSION 0.33.8
+ENV NVM_VERSION 0.34.0
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_VERSION=${nodev}
 
