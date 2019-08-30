@@ -1,0 +1,5 @@
+SIFT_ROOT="test/"
+ENV="test"
+SIFT_JSON="sift.json"
+IPC_ROOT="root/usr/ipc"
+DRY=false
