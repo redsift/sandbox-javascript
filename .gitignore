@@ -9,3 +9,6 @@ test/npm-debug.log
 test/server-alt/node_modules/
 
 test/server/node_modules/
+node_modules
+coverage
+output

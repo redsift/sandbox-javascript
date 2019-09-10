@@ -2,36 +2,36 @@
 /* global process */
 'use strict';
 
-var child = require('child_process');
-var fs = require('fs');
-var path = require('path');
+const child = require('child_process');
+const fs = require('fs');
+const path = require('path');
 
-var MAX_STDERR_BUFFER = 1024 * 1024;
+const MAX_STDERR_BUFFER = 1024 * 1024;
 
 // -------- Init
 
-var init = require('./init.js');
+const init = require('./init.js');
 
-var nodes = init.nodes;
+const nodes = init.nodes;
 
-var SIFT_ROOT = init.SIFT_ROOT;
-var SIFT_JSON = init.SIFT_JSON;
+const SIFT_ROOT = init.SIFT_ROOT;
+const SIFT_JSON = init.SIFT_JSON;
 
-var sift = init.sift;
+const sift = init.sift;
 
 // -------- Main
 
 if (process.env.NPM_TOKEN && process.env.NPM_TOKEN.length > 0) {
-	try{
-		fs.writeFileSync('/home/sandbox/.npmrc', process.env.NPM_TOKEN, {flag: 'a'})
-	}catch(e){
+	try {
+		fs.writeFileSync('/home/sandbox/.npmrc', process.env.NPM_TOKEN, { flag: 'a' })
+	} catch (e) {
 		throw new Error('failed to populate ~/.npmrc with NPM_TOKEN var')
 	}
 }
 
-var map = {};
+let map = {};
 nodes.forEach(function (i) {
-	var n = sift.dag.nodes[i];
+	const n = sift.dag.nodes[i];
 	if (n === undefined) {
 		throw new Error('Node #' + i + ' is not known');
 	}
@@ -41,16 +41,15 @@ nodes.forEach(function (i) {
 		throw new Error('implementation not supported by install at node #' + i);
 	}
 
-	var js = path.join(SIFT_ROOT, path.dirname(n.implementation.javascript));
+	const js = path.join(SIFT_ROOT, path.dirname(n.implementation.javascript));
 	map[js] = true;
 });
 
-var final = Object.keys(map).reduce(function (last, pathToInstall) {
-	var file;
+const final = Object.keys(map).reduce(function (last, pathToInstall) {
+	let file;
 	try {
 		file = fs.statSync(path.join(pathToInstall, 'package.json'));
-	}
-	catch (e) {
+	} catch (e) {
 		// not an error if missing
 		console.log('Skipping', pathToInstall);
 		return last;
@@ -82,3 +81,7 @@ final.then(function () {
 	console.error(err);
 	process.exit(-1);
 });
+
+module.exports = {
+	final
+}

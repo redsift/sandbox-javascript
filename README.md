@@ -23,3 +23,20 @@ Parameters are the node numbers you wish the script to install or execute.
 		0 1 2
 
 `nn_req -X /run/sandbox/ipc/0.sock -D "{\"dummy\":1}" --raw`
+
+
+# Running tests
+ - `install capnproto 0.6.1 from source`
+ ```
+ curl -O https://capnproto.org/capnproto-c++-0.6.1.tar.gz
+ tar zxf capnproto-c++-0.6.1.tar.gz
+ cd capnproto-c++-0.6.1
+ ./configure
+ make -j6 check
+ sudo make install
+ ```
+ - `npm install`
+ - `npm test`
+
+# Build docker
+ - `docker build -t quay.io/redsift/sandbox-javascript:some-custom-tag .`

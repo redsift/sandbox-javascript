@@ -1,0 +1,44 @@
+{
+  "name": "sandbox-javascript",
+  "version": "2.0.0",
+  "description": "JavaScript docker sandbox",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "export $(cat test/.test | xargs) && ./node_modules/jest-cli/bin/jest.js --collect-coverage --coverageDirectory=output/coverage/jest && open -a 'Google Chrome' output/coverage/jest/lcov-report/index.html",
+    "test-github": "export $(cat test/.test | xargs) && ./node_modules/jest-cli/bin/jest.js --forceExit",
+    "test-dev": "export $(cat test/.test | xargs) && ./node_modules/jest-cli/bin/jest.js --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/redsift/sandbox-javascript"
+  },
+  "keywords": [
+    "jest"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "capnp": "^0.3.1",
+    "jest": "^24.9.0",
+    "jest-cli": "^24.9.0",
+    "nanomsg": "^4.1.0",
+    "uuid": "^3.3.3"
+  },
+  "jest": {
+    "testRegex": "test/(.*)\\.test\\.js",
+    "verbose": true,
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "<rootDir>/node_modules/"
+    ],
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "cobertura"
+    ],
+    "collectCoverageFrom": [
+      "root/usr/bin/redsift/*.js"
+    ]
+  }
+}
