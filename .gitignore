@@ -12,3 +12,5 @@ test/server/node_modules/
 node_modules
 coverage
 output
+
+test/*/package-lock.json
