@@ -15,12 +15,10 @@ const init = require('./init.js');
 const nodes = init.nodes;
 
 const SIFT_ROOT = init.SIFT_ROOT;
-const SIFT_JSON = init.SIFT_JSON;
 
 const sift = init.sift;
 
 // -------- Main
-
 if (process.env.NPM_TOKEN && process.env.NPM_TOKEN.length > 0) {
 	try {
 		fs.writeFileSync('/home/sandbox/.npmrc', process.env.NPM_TOKEN, { flag: 'a' })

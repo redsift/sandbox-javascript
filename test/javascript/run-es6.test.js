@@ -1,5 +1,9 @@
 describe('run es6', () => {
 
+  beforeEach(() => {
+    jest.resetModules();
+  });
+
   test('execute - no error thrown', () => {
     try {
       require('../../root/usr/bin/redsift/run-es6.js');
@@ -7,6 +11,15 @@ describe('run es6', () => {
       console.log(e);
       expect(true).toEqual(false);
     }
+  });
+
+  describe('dry run', () => {
+    process.env.DRY = true;
+    jest.spyOn(global.console, 'log')
+    test('true', () => {
+      require('../../root/usr/bin/redsift/run-es6.js');
+      expect(console.log).toHaveBeenCalledWith('Detected Dry run');
+    });
   });
 
   describe('detectCapnProtocol', () => {
@@ -39,6 +52,25 @@ describe('run es6', () => {
             generation: 0
           }]
         }
+      };
+      const result = run.detectCapnProtocol(req);
+      expect(result).toEqual(false);
+    });
+    test('console.log error', () => {
+      const req = {
+        in: {
+          data: [{
+            bananas: 1234
+          }]
+        }
+      };
+      const result = run.detectCapnProtocol(req);
+      expect(result).toEqual(false);
+      expect(run.detectCapnProtocol).toThrow(TypeError);
+    });
+    test('no req.in.data', () => {
+      const req = {
+        in: {}
       };
       const result = run.detectCapnProtocol(req);
       expect(result).toEqual(false);
