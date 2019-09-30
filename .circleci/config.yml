@@ -10,6 +10,9 @@ executors:
     environment: *envvars
     docker:
       - image: quay.io/redsift/buildos-node-ubuntu
+        auth:
+          username: $QUAY_USER
+          password: $QUAY_PASS
 
   baseexec:
     shell: /bin/bash
@@ -33,7 +36,6 @@ commands:
           npm install
           npm run test-github
       - setup_remote_docker
-      - run: docker login -u $QUAY_USER -p $QUAY_PASS quay.io
       - run: ./circle/docker_build << parameters.nv >> << parameters.islatest >>
       - run: ./circle/gen_testing_dockerfile << parameters.nv >>
       - run: ./circle/docker_test << parameters.nv >>
@@ -68,7 +70,8 @@ workflows:
   version: 2.1
   build-and-deploy:
     jobs:
-      - build_default
+      - build_default:
+          context: org-global
       - trigger-builds:
           requires:
             - build_default
