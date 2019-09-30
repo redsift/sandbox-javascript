@@ -9,14 +9,13 @@ executors:
     shell: /bin/bash
     environment: *envvars
     docker:
-      - image: cibuilds/docker:18.06.3-ce
+      - image: quay.io/redsift/buildos-node-ubuntu
 
   baseexec:
     shell: /bin/bash
     environment: *envvars
     docker:
-      - image: mhart/alpine-node:8
-
+      - image: cibuilds/base:2019.03
 
 commands:
   v_build:
@@ -29,21 +28,11 @@ commands:
         default: false
     steps:
       - checkout
-      - setup_remote_docker
-      - run: |
-          echo Installing Capn'Proto for node 8
-          apk --no-cache add openssl wget
-          apk add build-base
-          curl -O https://capnproto.org/capnproto-c++-0.6.1.tar.gz
-          tar zxf capnproto-c++-0.6.1.tar.gz
-          cd capnproto-c++-0.6.1
-          ./configure
-          make -j6 check
-          sudo make install
       - run: |
           echo Running test
           npm install
           npm run test-github
+      - setup_remote_docker
       - run: docker login -u $QUAY_USER -p $QUAY_PASS quay.io
       - run: ./circle/docker_build << parameters.nv >> << parameters.islatest >>
       - run: ./circle/gen_testing_dockerfile << parameters.nv >>
