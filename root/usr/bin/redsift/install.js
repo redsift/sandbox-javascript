@@ -20,10 +20,11 @@ const sift = init.sift;
 
 // -------- Main
 if (process.env.NPM_TOKEN && process.env.NPM_TOKEN.length > 0) {
+  const file = `${__dirname}/.npmrc`;
   try {
-    fs.writeFileSync('~/.npmrc', process.env.NPM_TOKEN, { flag: 'a' })
+    fs.writeFileSync(file, process.env.NPM_TOKEN, { flag: 'a' })
   } catch (e) {
-    throw new Error('failed to populate ~/.npmrc with NPM_TOKEN var')
+    throw new Error(`failed to populate ${file} with NPM_TOKEN var`);
   }
 }
 

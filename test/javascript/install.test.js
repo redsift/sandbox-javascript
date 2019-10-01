@@ -18,13 +18,11 @@ describe('install', () => {
     expect(mockExit).toHaveBeenCalledWith(0);
   });
 
-  test('process.env.NPM_TOKEN', () => {
+  test.only('process.env.NPM_TOKEN', async () => {
     process.env.NPM_TOKEN = 'token';
-    try {
-      require('../../root/usr/bin/redsift/install.js');
-      expect(true).toEqual(false); // If error caught this will fail the test
-    } catch (e) {
-      expect(e).toEqual(new Error('failed to populate ~/.npmrc with NPM_TOKEN var'));
-    }
+    const install = require('../../root/usr/bin/redsift/install.js');
+    const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => { });
+    await install.final;
+    expect(mockExit).toHaveBeenCalledWith(0);
   });
 });

@@ -32,8 +32,10 @@ commands:
     steps:
       - checkout
       - run: |
-          echo Running test
+          echo "Running npm install"
           npm install
+      - run: |
+          echo "Running test"
           npm run test-github
       - setup_remote_docker
       - run: ./circle/docker_build << parameters.nv >> << parameters.islatest >>
