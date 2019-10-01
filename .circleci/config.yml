@@ -57,7 +57,10 @@ jobs:
           echo "Running npm install"
           npm install
           echo "Running test"
-          npm run test-github
+          mkdir -p ./test-results
+          npm run test-ci
+      - store_test_results:
+          path: ./test-results
 
   build_default:
     executor: dockexec

@@ -17,12 +17,4 @@ describe('install', () => {
     await install.final;
     expect(mockExit).toHaveBeenCalledWith(0);
   });
-
-  test.only('process.env.NPM_TOKEN', async () => {
-    process.env.NPM_TOKEN = 'token';
-    const install = require('../../root/usr/bin/redsift/install.js');
-    const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => { });
-    await install.final;
-    expect(mockExit).toHaveBeenCalledWith(0);
-  });
 });

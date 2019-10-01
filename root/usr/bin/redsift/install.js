@@ -20,7 +20,7 @@ const sift = init.sift;
 
 // -------- Main
 if (process.env.NPM_TOKEN && process.env.NPM_TOKEN.length > 0) {
-  const file = `${__dirname}/.npmrc`;
+  const file = path.normalize(`${__dirname}/../../../home/sandbox/.npmrc`);
   try {
     fs.writeFileSync(file, process.env.NPM_TOKEN, { flag: 'a' })
   } catch (e) {
