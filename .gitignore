@@ -10,7 +10,9 @@ test/server-alt/node_modules/
 
 test/server/node_modules/
 node_modules
-coverage
-output
-
+coverage/
+output/
+test-results
 test/*/package-lock.json
+root/usr/bin/redsift/.npmrc
+root/home/sandbox/.npmrc

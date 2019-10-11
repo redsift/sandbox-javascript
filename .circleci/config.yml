@@ -9,14 +9,21 @@ executors:
     shell: /bin/bash
     environment: *envvars
     docker:
-      - image: cibuilds/docker:18.06.3-ce
+      - image: cibuilds/docker:19.03.2
+
+  testexec:
+    shell: /bin/bash
+    docker:
+      - image: quay.io/redsift/buildos-node-ubuntu
+        auth:
+          username: $QUAY_USER
+          password: $QUAY_PASS
 
   baseexec:
     shell: /bin/bash
     environment: *envvars
     docker:
       - image: cibuilds/base:2019.03
-
 
 commands:
   v_build:
@@ -42,6 +49,19 @@ commands:
           command: docker push $CONTAINER_NAME
 
 jobs:
+  run_tests:
+    executor: testexec
+    steps:
+      - checkout
+      - run: |
+          echo "Running npm install"
+          npm install
+          echo "Running test"
+          mkdir -p ./test-results
+          npm run test-ci
+      - store_test_results:
+          path: ./test-results
+
   build_default:
     executor: dockexec
     steps:
@@ -65,7 +85,12 @@ workflows:
   version: 2.1
   build-and-deploy:
     jobs:
-      - build_default
+      - run_tests:
+          context: org-global
+      - build_default:
+          context: org-global
+          requires:
+            - run_tests
       - trigger-builds:
           requires:
             - build_default
