@@ -49,24 +49,55 @@ commands:
           command: docker push $CONTAINER_NAME
 
 jobs:
-  run_tests:
+  run_v8_test:
     executor: testexec
     steps:
       - checkout
       - run: |
+          echo "Running node-capnp install"
+          git clone https://github.com/capnproto/node-capnp.git
+          cd node-capnp
+          npm install
+      - run: |
           echo "Running npm install"
           npm install
+      - run: |
           echo "Running test"
           mkdir -p ./test-results
           npm run test-ci
       - store_test_results:
           path: ./test-results
 
-  build_default:
+  build_v8:
     executor: dockexec
     steps:
+      - v_build
+
+  run_v10_test:
+    executor: testexec
+    steps:
+      - checkout
+      - run: |
+          echo "Running node-capnp install"
+          git clone https://github.com/capnproto/node-capnp.git
+          cd node-capnp
+          npm install
+      - run: |
+          echo "Running npm install"
+          npm install
+      - run: |
+          echo "Running test"
+          mkdir -p ./test-results
+          npm run test-ci
+      - store_test_results:
+          path: ./test-results
+
+  build_v10:
+    executor: dockexec
+    steps:
+      - checkout
       - v_build:
-          nv: "8.10.0"
+          nv: "10.17.0"
           islatest: true
 
   build_placeholder:
@@ -85,15 +116,20 @@ workflows:
   version: 2.1
   build-and-deploy:
     jobs:
-      - run_tests:
-          context: org-global
-      - build_default:
-          context: org-global
+      - run_v8_test
+      - run_v10_test
+      - build_v8:
           requires:
-            - run_tests
+            - run_v8_test 
+          context: org-global
+      - build_v10:
+          requires:
+            - run_v10_test 
+          context: org-global
       - trigger-builds:
           requires:
-            - build_default
+            - build_v8
+            - build_v10
           filters:
             branches:
               only:

@@ -12,10 +12,16 @@ if [ $tagName == "release" ]; then
   SUFFIX=""
   parentVersion="latest"
 fi
+
+dockerInputfile="node8.Dockerfile"
+if [ $NV == "10.17.0" ]; then
+  dockerInputfile="node10.Dockerfile"
+fi
+
 imageName=$CONTAINER_NAME:v$NV$SUFFIX
 
-echo "Configuring FROM in Dockerfile with base=sandbox:${parentVersion}"
-sed "s/^\(FROM quay.io\/redsift\/sandbox:\).*$/\1${parentVersion}/" < Dockerfile > Dockerfile.versioned
+echo "Configuring FROM in ${dockerInputfile} with base=sandbox:${parentVersion}"
+sed "s/^\(FROM quay.io\/redsift\/sandbox:\).*$/\1${parentVersion}/" < $dockerInputfile > Dockerfile.versioned
 
 echo Building $imageName
 docker build --build-arg nodev=$NV -t $imageName -f Dockerfile.versioned .

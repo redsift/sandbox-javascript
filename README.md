@@ -26,14 +26,20 @@ Parameters are the node numbers you wish the script to install or execute.
 
 
 # Running tests
- - `install capnproto 0.6.1 from source`
+ - `install capnproto 0.7.0 from source`
  ```
- curl -O https://capnproto.org/capnproto-c++-0.6.1.tar.gz
- tar zxf capnproto-c++-0.6.1.tar.gz
- cd capnproto-c++-0.6.1
+ curl -O https://capnproto.org/capnproto-c++-0.7.0.tar.gz
+ tar zxf capnproto-c++-0.7.0.tar.gz
+ cd capnproto-c++-0.7.0
  ./configure
  make -j6 check
  sudo make install
+ ```
+ - install node-capnp from git
+ ```
+ git clone git://github.com/kenton/node-capnp.git
+ cd node-capnp
+ npm install
  ```
  - `npm install`
  - `npm test`
