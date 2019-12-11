@@ -25,6 +25,21 @@ executors:
     docker:
       - image: cibuilds/base:2019.03
 
+  n8_10exec:
+    shell: /bin/bash
+    docker:
+      - image: circleci/node:8.10.0
+  
+  n10_17exec:
+    shell: /bin/bash
+    docker:
+      - image: circleci/node:10.17.0
+  
+  n12_13_1exec:
+    shell: /bin/bash
+    docker:
+      - image: circleci/node:12.13.1
+
 commands:
   v_build:
     parameters:
@@ -47,57 +62,52 @@ commands:
             - circle
       - deploy:
           command: docker push $CONTAINER_NAME
+  test:
+    steps:
+      - run:
+          description: "Running npm install"
+          command: npm install
+      - run:
+          description: "Running test"
+          command: mkdir -p ./test-results && npm run test-ci
+      - store_test_results:
+          path: ./test-results
 
 jobs:
-  run_v8_test:
-    executor: testexec
+  build_v8:
+    executor: n8_10exec
     steps:
-      - checkout
       - run: |
           echo "Running node-capnp install"
-          git clone https://github.com/capnproto/node-capnp.git
-          cd node-capnp
-          npm install
-      - run: |
-          echo "Running npm install"
-          npm install
-      - run: |
-          echo "Running test"
-          mkdir -p ./test-results
-          npm run test-ci
-      - store_test_results:
-          path: ./test-results
-
-  build_v8:
-    executor: dockexec
-    steps:
+          npm i git://github.com/capnproto/node-capnp.git
+      - test
       - v_build
 
-  run_v10_test:
-    executor: testexec
+  build_v10:
+    executor: n10_17exec
     steps:
-      - checkout
       - run: |
           echo "Running node-capnp install"
-          git clone https://github.com/capnproto/node-capnp.git
+          git clone --single-branch --branch patched https://github.com/redsift/node-capnp.git
           cd node-capnp
-          npm install
-      - run: |
-          echo "Running npm install"
-          npm install
-      - run: |
-          echo "Running test"
-          mkdir -p ./test-results
-          npm run test-ci
-      - store_test_results:
-          path: ./test-results
-
-  build_v10:
-    executor: dockexec
-    steps:
+          npm run install
+      - test
       - v_build:
           nv: "10.17.0"
+
+  build_v12:
+    executor: n12_13_1exec
+    steps:
+      - run: |
+          echo "Running node-capnp install"
+          git clone --single-branch --branch patched https://github.com/redsift/node-capnp.git
+          cd node-capnp
+          npm run install
+      - test
+      - v_build:
+          nv: "12.13.1"
           islatest: true
+
 
   build_placeholder:
     executor: dockexec
@@ -115,15 +125,11 @@ workflows:
   version: 2.1
   build-and-deploy:
     jobs:
-      - run_v8_test
-      - run_v10_test
       - build_v8:
-          requires:
-            - run_v8_test 
           context: org-global
       - build_v10:
-          requires:
-            - run_v10_test 
+          context: org-global
+      - build_v12:
           context: org-global
       - trigger-builds:
           requires:
