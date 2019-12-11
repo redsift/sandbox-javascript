@@ -39,9 +39,8 @@ COPY root /
 
 # Build node-capnp
 RUN cd /usr/bin/redsift && \
-  git clone https://github.com/capnproto/node-capnp.git && \
-  cd node-capnp && \
-  npm install
+  git clone --single-branch --branch patched https://github.com/redsift/node-capnp.git && \
+  cd node-capnp && npm run install
 
 # Install any required NPM modules
 RUN cd /usr/bin/redsift && \
