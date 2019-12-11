@@ -95,7 +95,6 @@ jobs:
   build_v10:
     executor: dockexec
     steps:
-      - checkout
       - v_build:
           nv: "10.17.0"
           islatest: true
