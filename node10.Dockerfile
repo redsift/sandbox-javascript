@@ -44,9 +44,10 @@ RUN cd /usr/bin/redsift && \
 
 # Install any required NPM modules
 RUN cd /usr/bin/redsift && \
-  npm install && npm install nanomsg@4.0.2 && npm install capnp && \
+  npm install && \
   npm run es6 && rm -Rf node_modules/\@babel/* node_modules/jshint
 
 RUN chown -R sandbox:sandbox $HOME
 
 ENTRYPOINT [ "node" ]
+
