@@ -8,7 +8,7 @@ LABEL author.name="Karl Norling" \
 ARG nodev=10.17.0
 LABEL io.redsift.sandbox.install="/usr/bin/redsift/install.js" io.redsift.sandbox.run="/usr/bin/redsift/run.js"
 
-ENV NVM_VERSION 0.34.0
+ENV NVM_VERSION 0.35.1
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_VERSION=${nodev}
 
