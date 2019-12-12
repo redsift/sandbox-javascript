@@ -1,0 +1,14 @@
+#!/bin/bash
+set -eu
+
+MV="(${NODE_VERSION/./\ })"
+cd /usr/bin/redsift
+
+if [ "$MV" == "8" ]; then
+    git clone https://github.com/capnproto/node-capnp.git
+else
+    git clone --single-branch --branch patched https://github.com/redsift/node-capnp.git
+fi
+
+cd node-capnp
+npm run install

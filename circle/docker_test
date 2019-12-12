@@ -24,3 +24,7 @@ docker run -u 7438:7438 $imageName $INIT 0 2 3
 RUN=$(docker inspect -f "{{index .Config.Labels \"io.redsift.sandbox.run\" }}" $imageName)
 echo "Calling run = $RUN"
 docker run -u 7438:7438 -e DRY=true $imageName $RUN 0 2 3
+
+echo "Running coverage tests"
+mkdir -p /tmp/test-results
+docker run -v /tmp/test-results:/tmp/test-results --entrypoint=/bin/bash $imageName -c "cd /tmp; npm run test-ci"

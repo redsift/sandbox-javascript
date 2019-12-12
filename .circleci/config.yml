@@ -11,34 +11,11 @@ executors:
     docker:
       - image: cibuilds/docker:19.03.2
 
-  testexec:
-    shell: /bin/bash
-    docker:
-      - image: quay.io/redsift/buildos-node-ubuntu
-        auth:
-          username: $QUAY_USER
-          password: $QUAY_PASS
-
   baseexec:
     shell: /bin/bash
     environment: *envvars
     docker:
       - image: cibuilds/base:2019.03
-
-  n8_10exec:
-    shell: /bin/bash
-    docker:
-      - image: circleci/node:8.10.0
-  
-  n10_17exec:
-    shell: /bin/bash
-    docker:
-      - image: circleci/node:10.17.0
-  
-  n12_13_1exec:
-    shell: /bin/bash
-    docker:
-      - image: circleci/node:12.13.1
 
 commands:
   v_build:
@@ -62,48 +39,22 @@ commands:
             - circle
       - deploy:
           command: docker push $CONTAINER_NAME
-  test:
-    steps:
-      - run:
-          description: "Running npm install"
-          command: npm install
-      - run:
-          description: "Running test"
-          command: mkdir -p ./test-results && npm run test-ci
-      - store_test_results:
-          path: ./test-results
 
 jobs:
   build_v8:
-    executor: n8_10exec
+    executor: dockexec
     steps:
-      - run: |
-          echo "Running node-capnp install"
-          npm i git://github.com/capnproto/node-capnp.git
-      - test
       - v_build
 
   build_v10:
-    executor: n10_17exec
+    executor: dockexec
     steps:
-      - run: |
-          echo "Running node-capnp install"
-          git clone --single-branch --branch patched https://github.com/redsift/node-capnp.git
-          cd node-capnp
-          npm run install
-      - test
       - v_build:
           nv: "10.17.0"
 
   build_v12:
-    executor: n12_13_1exec
+    executor: dockexec
     steps:
-      - run: |
-          echo "Running node-capnp install"
-          git clone --single-branch --branch patched https://github.com/redsift/node-capnp.git
-          cd node-capnp
-          npm run install
-      - test
       - v_build:
           nv: "12.13.1"
           islatest: true
@@ -135,6 +86,7 @@ workflows:
           requires:
             - build_v8
             - build_v10
+            - build_v12
           filters:
             branches:
               only:

@@ -8,9 +8,10 @@ LABEL author.name="Karl Norling" \
 ARG nodev=8.10.0
 LABEL io.redsift.sandbox.install="/usr/bin/redsift/install.js" io.redsift.sandbox.run="/usr/bin/redsift/run.js"
 
-ENV NVM_VERSION 0.34.0
+ENV NVM_VERSION 0.35.1
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_VERSION=${nodev}
+ENV NPM_VERSION=6.13.4
 
 # Install a minimal git + python + build tools as npm and node-gyp often needs it for modules
 RUN export DEBIAN_FRONTEND=noninteractive && \
@@ -24,7 +25,9 @@ RUN mkdir -p $NVM_DIR && curl https://raw.githubusercontent.com/creationix/nvm/v
   && . $NVM_DIR/nvm.sh \
   && nvm install $NODE_VERSION \
   && nvm alias default $NODE_VERSION \
-  && nvm use default
+  && nvm use default \
+  && npm i -g npm@${NPM_VERSION} \
+  && npm_config_user=root
 
 ENV NODE_PATH $NVM_DIR/versions/node/v$NODE_VERSION/lib/node_modules
 ENV PATH      $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
@@ -38,10 +41,7 @@ RUN \
 COPY root /
 
 # Build node-capnp
-RUN cd /usr/bin/redsift && \
-  git clone https://github.com/capnproto/node-capnp.git && \
-  cd node-capnp && \
-  npm install
+RUN /tmp/install_capnp
 
 # Install any required NPM modules
 RUN cd /usr/bin/redsift && \
