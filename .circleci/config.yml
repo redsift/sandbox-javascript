@@ -52,14 +52,6 @@ jobs:
       - v_build:
           nv: "10.17.0"
 
-  build_v12:
-    executor: dockexec
-    steps:
-      - v_build:
-          nv: "12.13.1"
-          islatest: true
-
-
   build_placeholder:
     executor: dockexec
     steps:
@@ -80,13 +72,10 @@ workflows:
           context: org-global
       - build_v10:
           context: org-global
-      - build_v12:
-          context: org-global
       - trigger-builds:
           requires:
             - build_v8
             - build_v10
-            - build_v12
           filters:
             branches:
               only:
