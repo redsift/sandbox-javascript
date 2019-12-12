@@ -10,6 +10,6 @@ if [ $tagName == "release" ]; then
 fi
 imageName=$CONTAINER_NAME:v$NV$SUFFIX
 
-sed "s/^FROM quay.io\/redsift\/sandbox-javascript:.*$/FROM $imageName/" < Dockerfile.test.templ > Dockerfile.testing
+sed "s~^FROM quay.io/redsift/sandbox-javascript:.*$~FROM $imageName~" < Dockerfile.test.templ > Dockerfile.testing
 
 

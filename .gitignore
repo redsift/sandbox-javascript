@@ -18,3 +18,4 @@ root/usr/bin/redsift/.npmrc
 root/home/sandbox/.npmrc
 
 node-capnp
+Dockerfile.testing
