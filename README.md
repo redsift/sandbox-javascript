@@ -37,7 +37,7 @@ Parameters are the node numbers you wish the script to install or execute.
  ```
  - install node-capnp from git
  ```
- git clone git://github.com/kenton/node-capnp.git
+ git clone --single-branch --branch patched https://github.com/redsift/node-capnp.git
  cd node-capnp
  npm install
  ```
@@ -46,3 +46,4 @@ Parameters are the node numbers you wish the script to install or execute.
 
 # Build docker
  - `docker build -t quay.io/redsift/sandbox-javascript:some-custom-tag .`
+ 

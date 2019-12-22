@@ -56,7 +56,7 @@ jobs:
     executor: dockexec
     steps:
       - v_build:
-          nv: "12.13.1"
+          nv: "12.14.0"
           islatest: true
 
 
