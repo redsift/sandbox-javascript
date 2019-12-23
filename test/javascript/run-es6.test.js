@@ -60,6 +60,7 @@ describe('run es6', () => {
       const req = {
         in: {
           data: [{
+            key: 'bananas',
             bananas: 1234
           }]
         }
