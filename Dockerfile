@@ -41,7 +41,7 @@ RUN \
 COPY root /
 
 # Build node-capnp
-RUN /tmp/install_capnp
+RUN /usr/bin/install_capnp
 
 # Install any required NPM modules
 RUN cd /usr/bin/redsift && \
