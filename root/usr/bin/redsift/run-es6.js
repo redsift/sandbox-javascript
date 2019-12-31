@@ -105,15 +105,15 @@ nodes.forEach(function (i) {
     const isCapnProto = detectCapnProtocol(req);
 
     if (isSchema2 && isApiRpc) {
-      console.debug(`Schema version 2 and _rpc output detected for bucket: ${req.in.bucket}`);
+      //console.debug(`Schema version 2 and _rpc output detected for bucket: ${req.in.bucket}`);
       if (isCapnProto) {
-        console.debug(`Cap'n Proto Schema detected for bucket: ${req.in.bucket}`);
+        //console.debug(`Cap'n Proto Schema detected for bucket: ${req.in.bucket}`);
         req = protocol.fromEncodedCapnpMessage(req);
       } else {
         req = protocol.fromEncodedMessageFile(req);
       }
     } else {
-      console.debug(`Schema version 1 for for bucket: ${req.in.bucket}`);
+      //console.debug(`Schema version 1 for for bucket: ${req.in.bucket}`);
       req = protocol.fromEncodedMessage(JSON.parse(msg));
     }
 
