@@ -1,19 +1,17 @@
 #!/bin/bash
 set -eu
 
-cd /usr/bin/redsift
+nv="${NODE_VERSION:-12.14.0}"
 
-echo $NODE_VERSION
+echo "Installing node-capnp for node:${nv}..."
 
-if [[ $NODE_VERSION == 8* ]]; then
+rm -rf ./node-capnp
+if [[ $nv == 8* ]]; then
     git clone https://github.com/capnproto/node-capnp.git
-elif [[ $NODE_VERSION == 12* ]]; then
+elif [[ $nv == 12* ]]; then
     git clone --single-branch --branch node12 https://github.com/redsift/node-capnp.git
 else
     git clone --single-branch --branch patched https://github.com/redsift/node-capnp.git
 fi
 
-cd node-capnp
-git status
-npm run install
-npm run test
+npm i --prefix ./node-capnp
