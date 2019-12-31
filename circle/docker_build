@@ -12,6 +12,7 @@ if [ $tagName == "release" ]; then
   SUFFIX=""
   parentVersion="latest"
 fi
+
 imageName=$CONTAINER_NAME:v$NV$SUFFIX
 
 echo "Configuring FROM in Dockerfile with base=sandbox:${parentVersion}"

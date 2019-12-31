@@ -10,6 +10,10 @@ if (process.argv.length < processLength) {
 
 const nodes = (process.env.ENV === 'test') ? [0] : process.argv.slice(2);
 
+if (!process.env.SIFT_ROOT) {
+  throw new Error('Environment SIFT_ROOT not set');
+}
+
 const SIFT_ROOT = path.resolve(process.env.SIFT_ROOT);
 const SIFT_JSON = process.env.SIFT_JSON;
 const IPC_ROOT = process.env.IPC_ROOT;

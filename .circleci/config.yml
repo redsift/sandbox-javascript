@@ -11,14 +11,6 @@ executors:
     docker:
       - image: cibuilds/docker:19.03.2
 
-  testexec:
-    shell: /bin/bash
-    docker:
-      - image: quay.io/redsift/buildos-node-ubuntu
-        auth:
-          username: $QUAY_USER
-          password: $QUAY_PASS
-
   baseexec:
     shell: /bin/bash
     environment: *envvars
@@ -41,33 +33,28 @@ commands:
       - run: ./circle/docker_build << parameters.nv >> << parameters.islatest >>
       - run: ./circle/gen_testing_dockerfile << parameters.nv >>
       - run: ./circle/docker_test << parameters.nv >>
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - circle
       - deploy:
           command: docker push $CONTAINER_NAME
 
 jobs:
-  run_tests:
-    executor: testexec
+  build_v8:
+    executor: dockexec
     steps:
-      - checkout
-      - run: |
-          echo "Running npm install"
-          npm install
-          echo "Running test"
-          mkdir -p ./test-results
-          npm run test-ci
-      - store_test_results:
-          path: ./test-results
+      - v_build
 
-  build_default:
+  build_v10:
     executor: dockexec
     steps:
       - v_build:
-          nv: "8.10.0"
+          nv: "10.17.0"
+
+  build_v12:
+    executor: dockexec
+    steps:
+      - v_build:
+          nv: "12.14.0"
           islatest: true
+
 
   build_placeholder:
     executor: dockexec
@@ -77,24 +64,26 @@ jobs:
   trigger-builds:
     executor: baseexec
     steps:
-      - attach_workspace:
-          at: /
-      - run: /circle/trigger_build
+      - checkout
+      - run: ./circle/trigger_build
 
 workflows:
   version: 2.1
   build-and-deploy:
     jobs:
-      - run_tests:
+      - build_v8:
           context: org-global
-      - build_default:
+      - build_v10:
           context: org-global
-          requires:
-            - run_tests
+      - build_v12:
+          context: org-global
       - trigger-builds:
           requires:
-            - build_default
+            - build_v8
+            - build_v10
+            - build_v12
           filters:
             branches:
               only:
                 - master
+                - release-1
