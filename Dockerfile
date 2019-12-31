@@ -40,7 +40,7 @@ RUN \
 # Copy support files across
 COPY root /
 
-# Install any required NPM modules
+# Install any required NPM modules (unsafe-perm: to allow for cloning)
 RUN cd /usr/bin/redsift && \
   npm install && \
   npm test && \

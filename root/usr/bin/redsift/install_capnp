@@ -14,4 +14,3 @@ else
     git clone --single-branch --branch patched https://github.com/redsift/node-capnp.git
 fi
 
-npm i --prefix ./node-capnp
