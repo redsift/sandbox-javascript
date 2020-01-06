@@ -45,7 +45,7 @@ const findBucketNodes = (bucket) => {
 const getRpcBucketNamesFromSift = () => {
   const bucketNames = [];
   if (sift.dag && sift.dag.outputs) {
-    Object.keys(sift.dag.outputs.exports).forEach(key => {
+    Object.keys(sift.dag.outputs.exports || {}).forEach(key => {
       if (sift.dag.outputs.exports[key].import == RPC_KEY) {
         bucketNames.push(key); // Push the bucket name if _rpc
       }
