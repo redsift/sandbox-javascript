@@ -3,9 +3,11 @@
   "version": "1.1.0",
   "description": "Sets up the sandbox for NodeJS backend tasks",
   "scripts": {
+    "preinstall": "./install_capnp && npm i --prefix ./node-capnp",
     "lint": "jshint --config .jshinrc run-es6.js",
     "es5": "node node_modules/babel-cli/bin/babel.js run-es6.js -o run.js",
-    "es6": "cp run-es6.js run.js"
+    "es6": "cp run-es6.js run.js",
+    "test": "npm test --prefix ./node-capnp"
   },
   "dependencies": {
     "nanomsg": "^4.1.0",

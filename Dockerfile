@@ -40,12 +40,10 @@ RUN \
 # Copy support files across
 COPY root /
 
-# Build node-capnp
-RUN /usr/bin/install_capnp
-
-# Install any required NPM modules
+# Install any required NPM modules (unsafe-perm: to allow for cloning)
 RUN cd /usr/bin/redsift && \
-  npm install && \
+  npm install --unsafe-perm && \ 
+  npm test && \
   npm run es6 && rm -Rf node_modules/\@babel/* node_modules/jshint
 
 
