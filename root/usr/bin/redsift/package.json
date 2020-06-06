@@ -10,7 +10,7 @@
     "test": "npm test --prefix ./node-capnp"
   },
   "dependencies": {
-    "nanomsg": "^4.1.0",
+    "nanomsg": "4.1.0",
     "capnp": "file:node-capnp"
   },
   "devDependencies": {
