@@ -1,5 +1,5 @@
 const convert = require('../../root/usr/bin/redsift/convert.js');
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 
 describe('b64Decode', () => {
   test('d.data instanceof Array', () => {

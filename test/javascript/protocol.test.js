@@ -1,6 +1,6 @@
 const protocol = require('../../root/usr/bin/redsift/protocol.js');
 const fs = require('fs');
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 const capnp = require('capnp');
 const convert = require('../../root/usr/bin/redsift/convert.js');
 
