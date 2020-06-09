@@ -4,11 +4,6 @@ const convert = require('./convert.js');
 const fs = require('fs');
 const path = require('path');
 
-const readFileContent = (file) => {
-  const filename = path.join(process.env.IPC_ROOT, file);
-  return fs.readFileSync(filename);
-};
-
 function flattenNestedArrays(value) {
   if (Array.isArray(value)) {
     if (value.length === 1 && Array.isArray(value[0])) {
@@ -20,8 +15,9 @@ function flattenNestedArrays(value) {
 }
 
 function getFileContent(d) {
-  const fileName = Buffer.from(d.value, 'base64').toString();
-  return readFileContent(fileName);
+  return fs.readFileSync(
+    path.join(process.env.IPC_ROOT, Buffer.from(d.value, 'base64').toString())
+  );
 }
 
 function fromEncodedCapnpMessage(body) {
