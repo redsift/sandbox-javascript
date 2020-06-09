@@ -102,11 +102,11 @@ nodes.forEach(function (i) {
 
     const nodeOutputs = findBucketNodes(req.in.bucket);
     const isApiRpcOutput = detectNodeRpcOutput(nodeOutputs, rpcBucketNames);
-    const isCapnProto = detectCapnProtocol(req);
+    const isCapnProtoInput = detectCapnProtocol(req);
 
     if (isSchema2) {
       //console.debug(`Schema version 2 and _rpc output detected for bucket: ${req.in.bucket}`);
-      if (isCapnProto) {
+      if (isCapnProtoInput) {
         //console.debug(`Cap'n Proto Schema detected for bucket: ${req.in.bucket}`);
         req = protocol.fromEncodedCapnpMessage(req);
       } else {
@@ -148,7 +148,7 @@ nodes.forEach(function (i) {
         //console.log('REP-VALUE:', value);
         const nodeTime = process.hrtime(startNode);
         const diff = process.hrtime(start);
-        if (isApiRpcOutput && isCapnProto) {
+        if (isSchema2 && isApiRpcOutput) {
           reply.send(protocol.toEncodedCapnpMessage(value, diff, decodeTime, nodeTime));
         } else {
           reply.send(protocol.toEncodedMessage(value, diff, decodeTime, nodeTime));
