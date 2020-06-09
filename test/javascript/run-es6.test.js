@@ -78,23 +78,13 @@ describe('run es6', () => {
     });
   });
 
-  describe('findBucketNodes', () => {
-    const run = require('../../root/usr/bin/redsift/run-es6.js');
-    test('get node config from req.in.bucket', () => {
-      const bucketName = 'api_scan';
-      const outputs = [{ "api_rpc": {} }]; // this is from the outputs in sift-schema2.json
-      const result = run.findBucketNodes(bucketName);
-      expect(result).toEqual(outputs);
-    })
-  });
-
   describe('getRpcBucketNamesFromSift', () => {
     // Setting schema version 2
     process.env.SIFT_JSON = 'sift-schema2.json';
     const run = require('../../root/usr/bin/redsift/run-es6.js');
     test('get _rpc exports from sift json', () => {
       const rpcExportBuckets = run.getRpcBucketNamesFromSift();
-      expect(rpcExportBuckets).toEqual(['api_rpc']);
+      expect(rpcExportBuckets).toEqual({"api_rpc": true});
     });
   });
 
@@ -104,19 +94,18 @@ describe('run es6', () => {
     const run = require('../../root/usr/bin/redsift/run-es6.js');
     test('get _rpc exports from sift json', () => {
       const rpcExportBuckets = run.getRpcBucketNamesFromSift();
-      expect(rpcExportBuckets).toEqual(['api_rpc']);
+      expect(rpcExportBuckets).toEqual({"api_rpc": true});
     });
   });
 
   describe('detectNodeRpcOutput', () => {
+    const init = require('../../root/usr/bin/redsift/init.js');
     // Setting schema version 2
     process.env.SIFT_JSON = 'sift-schema2.json';
     const run = require('../../root/usr/bin/redsift/run-es6.js');
     test('detect isApiRpcOutput', () => {
-      const bucketName = 'api_scan';
-      const nodeOutputs = run.findBucketNodes(bucketName);
       const rpcBucketNames = run.getRpcBucketNamesFromSift();
-      const isApiRpcOutput = run.detectNodeRpcOutput(nodeOutputs, rpcBucketNames);
+      const isApiRpcOutput = run.detectNodeRpcOutput(init.sift.dag.nodes[0].outputs, rpcBucketNames);
       expect(isApiRpcOutput).toEqual(true);
     });
   });

@@ -32,22 +32,13 @@ const detectCapnProtocol = (req) => {
   return false;
 };
 
-// Finds the matching node bucket outputs based on bucket in request
-const findBucketNodes = (bucket) => {
-  return sift.dag.nodes.map((node) => {
-    if (node.input && node.input.bucket === bucket) {
-      return node.outputs;
-    }
-  }).filter(output => !!output);
-};
-
 // Do we have _rpc outputs defined for the sift?
 const getRpcBucketNamesFromSift = () => {
-  const bucketNames = [];
+  const bucketNames = {};
   if (sift.dag && sift.dag.outputs) {
     Object.keys(sift.dag.outputs.exports || {}).forEach(key => {
       if (sift.dag.outputs.exports[key].import == RPC_KEY) {
-        bucketNames.push(key); // Push the bucket name if _rpc
+        bucketNames[key] = true; // Add the bucket name if _rpc
       }
     });
   }
@@ -58,13 +49,14 @@ const rpcBucketNames = getRpcBucketNamesFromSift();
 
 // Does the rpc outputs match the bucket name for the node?
 const detectNodeRpcOutput = (nodeOutputs, rpcBucketNames) => {
-  const matches = rpcBucketNames.filter(key => {
-    nodeOutputs.filter(output => {
-      return output[key] ? true : false;
-    });
-    return nodeOutputs.length ? true : false;
+  let matched = false;
+  Object.keys(nodeOutputs).forEach(key => {
+    if (rpcBucketNames[key]) {
+      matched = true;
+    }
   });
-  return matches.length > 0 ? true : false
+
+  return matched;
 };
 
 // -------- Main
@@ -100,8 +92,7 @@ nodes.forEach(function (i) {
     const start = process.hrtime();
     let req = JSON.parse(msg);
 
-    const nodeOutputs = findBucketNodes(req.in.bucket);
-    const isApiRpcOutput = detectNodeRpcOutput(nodeOutputs, rpcBucketNames);
+    const isApiRpcOutput = detectNodeRpcOutput(n.outputs, rpcBucketNames);
     const isCapnProtoInput = detectCapnProtocol(req);
 
     if (isSchema2) {
@@ -176,7 +167,6 @@ if (!hasImplementations) {
 // For testing mainly
 module.exports = {
   detectCapnProtocol,
-  findBucketNodes,
   getRpcBucketNamesFromSift,
   detectNodeRpcOutput
 }
