@@ -45,16 +45,18 @@ function fromEncodedMessageFile(body) {
   ['in', 'with'].forEach(function (k) {
     if (k in body) {
       body[k].data.forEach(d => {
-        const fileContent = readFileContent(d.value);
-        d.value = convert.b64Decode(fileContent);
+        const fileName = Buffer.from(d.value, 'base64').toString();
+        const fileContent = readFileContent(fileName);
+        d.value = fileContent;
       });
     }
   });
 
   if ('get' in body) {
     body.get.forEach(function (g) {
-      const fileContent = readFileContent(g.value);
-      g = convert.b64Decode(fileContent);
+      const fileName = Buffer.from(g.value, 'base64').toString();
+      const fileContent = readFileContent(fileName);
+      g = fileContent;
     });
   }
 
