@@ -46,10 +46,10 @@ if ((sift.dag === undefined) || (sift.dag.nodes === undefined)) {
 }
 
 module.exports = {
-  nodes: nodes,
-  SIFT_ROOT: SIFT_ROOT,
-  SIFT_JSON: SIFT_JSON,
-  IPC_ROOT: IPC_ROOT,
-  DRY: DRY,
-  sift: sift
+  nodes,
+  SIFT_ROOT,
+  SIFT_JSON,
+  IPC_ROOT,
+  DRY,
+  sift,
 };

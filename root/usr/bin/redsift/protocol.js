@@ -5,9 +5,9 @@ const fs = require('fs');
 const path = require('path');
 
 const readFileContent = (file) => {
-  const filename = path.join(process.env.IPC_ROOT, file)
+  const filename = path.join(process.env.IPC_ROOT, file);
   return fs.readFileSync(filename);
-}
+};
 
 function flattenNestedArrays(value) {
   if (Array.isArray(value)) {
@@ -27,16 +27,21 @@ function getFileContent(d) {
 function fromEncodedCapnpMessage(body) {
   ['in', 'with'].forEach(function (k) {
     if (k in body) {
-      body[k].data.forEach(d => {
-        d.value = convert.decodeCapnProto(getFileContent(d));
+      body[k].data.forEach((d) => {
+        const fc = getFileContent(d);
+        if (k === 'in') {
+          d.value = convert.decodeCapnProto(fc);
+        } else {
+          d.value = fc;
+        }
       });
     }
   });
 
   if ('get' in body) {
     body.get.forEach(function (g) {
-      g.data.forEach(d => {
-        d.value = convert.decodeCapnProto(getFileContent(d));
+      g.data.forEach((d) => {
+        d.value = getFileContent(d);
       });
     });
   }
@@ -47,7 +52,7 @@ function fromEncodedCapnpMessage(body) {
 function fromEncodedMessageFile(body) {
   ['in', 'with'].forEach(function (k) {
     if (k in body) {
-      body[k].data.forEach(d => {
+      body[k].data.forEach((d) => {
         d.value = getFileContent(d);
       });
     }
@@ -55,7 +60,7 @@ function fromEncodedMessageFile(body) {
 
   if ('get' in body) {
     body.get.forEach(function (g) {
-      g.data.forEach(d => {
+      g.data.forEach((d) => {
         d.value = getFileContent(d);
       });
     });
@@ -88,7 +93,15 @@ function toEncodedCapnpMessage(value, diff, decodeTime, nodeTime) {
     i.value = convert.encodeCapnProto(i.value).toString('base64');
   });
   const encodeTime = process.hrtime(startEncode);
-  return JSON.stringify({ out: flat, stats: { result: diff, decode: decodeTime, node: nodeTime, encode: encodeTime } });
+  return JSON.stringify({
+    out: flat,
+    stats: {
+      result: diff,
+      decode: decodeTime,
+      node: nodeTime,
+      encode: encodeTime,
+    },
+  });
 }
 
 function toEncodedMessage(value, diff, decodeTime, nodeTime) {
@@ -100,13 +113,21 @@ function toEncodedMessage(value, diff, decodeTime, nodeTime) {
     i = convert.b64Encode(i);
   });
   const encodeTime = process.hrtime(startEncode);
-  return JSON.stringify({ out: flat, stats: { result: diff, decode: decodeTime, node: nodeTime, encode: encodeTime } });
+  return JSON.stringify({
+    out: flat,
+    stats: {
+      result: diff,
+      decode: decodeTime,
+      node: nodeTime,
+      encode: encodeTime,
+    },
+  });
 }
 
 module.exports = {
-  fromEncodedCapnpMessage: fromEncodedCapnpMessage,
-  fromEncodedMessageFile: fromEncodedMessageFile,
-  fromEncodedMessage: fromEncodedMessage,
-  toEncodedCapnpMessage: toEncodedCapnpMessage,
-  toEncodedMessage: toEncodedMessage
+  fromEncodedCapnpMessage,
+  fromEncodedMessageFile,
+  fromEncodedMessage,
+  toEncodedCapnpMessage,
+  toEncodedMessage,
 };

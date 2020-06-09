@@ -7,213 +7,214 @@ const convert = require('../../root/usr/bin/redsift/convert.js');
 jest.mock('fs');
 
 describe('protocol', () => {
+  const fileName = 'ZmlsZW5hbWU=';
+  const dataValue = {
+    foo: 'bar',
+  };
+
+  const inReq = () => {
+    return {
+      in: {
+        bucket: 'in',
+        data: [
+          {
+            name: 'in_name',
+            key: 'in_key',
+            value: fileName,
+            epoch: 0,
+            generation: 0,
+          },
+        ],
+      },
+    };
+  };
+
+  const withReq = () => {
+    return {
+      with: {
+        bucket: 'with',
+        data: [
+          {
+            name: 'with_name',
+            key: 'with_key',
+            value: fileName,
+            epoch: 0,
+            generation: 0,
+          },
+        ],
+      },
+    };
+  };
+
+  const getReq = () => {
+    return {
+      get: [
+        {
+          bucket: 'get1',
+          key: '*',
+          data: [
+            {
+              name: 'get1',
+              key: 'get_key1',
+              value: fileName,
+              epoch: 0,
+              generation: 0,
+            },
+          ],
+        },
+        {
+          bucket: 'get2',
+          key: '*',
+          data: [
+            {
+              name: 'get2',
+              key: 'get_key2',
+              value: fileName,
+              epoch: 0,
+              generation: 0,
+            },
+          ],
+        },
+      ],
+    };
+  };
+
   describe('fromEncodedCapnpMessage func', () => {
-    test('in, with', () => {
+    test('in', () => {
       const KERASH_KEY = 'rstid:kerash:01DKYADEK8YVR3Y8011BVW5Z0T';
       const X_UUID = uuid();
       const a = uuid();
       const b = uuid();
-      const body = [{
-        a,
-        b
-      }];
-      const header = [{
-        key: 'Content-Type',
-        value: ['application/json']
-      }, {
-        key: 'REQUEST_UUID',
-        value: [X_UUID]
-      }];
+      const body = [
+        {
+          a,
+          b,
+        },
+      ];
+      const header = [
+        {
+          key: 'Content-Type',
+          value: ['application/json'],
+        },
+        {
+          key: 'REQUEST_UUID',
+          value: [X_UUID],
+        },
+      ];
+
       const value = {
-        statusCode: 200,
+        requestUri: 'https://hello.com/abc',
         header,
-        body: Buffer.from(JSON.stringify(body))
+        body: Buffer.from(JSON.stringify(body)),
       };
-      const req = [{
-        name: "api_rpc",
-        key: KERASH_KEY,
-        value,
-        epoch: 0,
-        generation: 0
-      }];
+
+      const req = {
+        in: {
+          bucket: 'api',
+          data: [
+            {
+              name: 'api_rpc',
+              key: KERASH_KEY,
+              value: 'ZmlsZW5hbWU=',
+              epoch: 0,
+              generation: 0,
+            },
+          ],
+        },
+      };
 
       // Return capnp buffer readFileSync to be used in fromEncodedCapnpMessage
-      const capnpBuffer = capnp.serialize(convert.rpcSchema.RpcResponse, value).toString('base64');
+      const capnpBuffer = capnp.serialize(convert.rpcSchema.RpcRequest, value);
       fs.readFileSync.mockReturnValue(capnpBuffer);
 
       const res = protocol.fromEncodedCapnpMessage(req);
-      const decodedBodyJSON = JSON.parse(Buffer.from(res[0].value.body).toString());
+      const decodedBodyJSON = JSON.parse(
+        Buffer.from(res.in.data[0].value.body).toString()
+      );
       expect(decodedBodyJSON).toEqual(body);
-      expect(res[0].value.header).toEqual(header);
+      expect(res.in.data[0].value.header).toEqual(header);
     });
 
-    //Get
-    test('get', () => {
-      const KERASH_KEY = 'rstid:kerash:01DKYADEK8YVR3Y8011BVW5Z0T';
-      const X_UUID = uuid();
-      const a = uuid();
-      const b = uuid();
-      const value = [{
-        a,
-        b
-      }];
-      const body = {
-        get: {
-          bucket: 'api_scan',
-          data: [{
-            key: KERASH_KEY,
-            value: Buffer.from(JSON.stringify(value)),
-            epoch: 1567606880,
-            generation: 0
-          }]
-        }
-      };
-      const req = {
-        statusCode: 200,
-        header: [{
-          key: 'Content-Type',
-          value: ['application/json']
-        }, {
-          key: 'X-UUID',
-          value: [X_UUID]
-        }],
-        body
-      };
-      fs.readFileSync.mockReturnValue(req);
+    // With
+    test('with', () => {
+      fs.readFileSync.mockReturnValue(JSON.stringify(dataValue));
 
-      const res = protocol.fromEncodedCapnpMessage(req);
-      res.body.get.data.map(d => {
-        expect(d.value.toString()).toEqual(JSON.stringify(value));
-      });
+      const res = protocol.fromEncodedCapnpMessage(withReq());
+      const decodedValueJSON = JSON.parse(
+        Buffer.from(res.with.data[0].value).toString()
+      );
+      expect(decodedValueJSON).toEqual(dataValue);
+    });
+
+    // Get
+    test('get', () => {
+      fs.readFileSync.mockReturnValue(JSON.stringify(dataValue));
+
+      const res = protocol.fromEncodedCapnpMessage(getReq());
+      const decodedValueJSON1 = JSON.parse(
+        Buffer.from(res.get[0].data[0].value).toString()
+      );
+      expect(decodedValueJSON1).toEqual(dataValue);
+
+      const decodedValueJSON2 = JSON.parse(
+        Buffer.from(res.get[1].data[0].value).toString()
+      );
+      expect(decodedValueJSON2).toEqual(dataValue);
     });
   });
 
   describe('fromEncodedMessageFile func', () => {
-    test('in, with', () => {
-      const NOT_KERASH = 'rstid:not_kerash:01DKYADEK8YVR3Y8011BVW5Z0T';
-      const a = uuid();
-      const b = uuid();
-      const value = [{
-        a,
-        b
-      }];
+    test('in', () => {
+      fs.readFileSync.mockReturnValue(dataValue);
 
-      fs.readFileSync.mockReturnValue(value);
+      const res = protocol.fromEncodedMessageFile(inReq());
+      res.in.data.map((d) => {
+        expect(d.value).toEqual(dataValue);
+      });
+    });
 
-      const req = {
-        in: {
-          bucket: 'api_scan',
-          data: [{
-            key: NOT_KERASH,
-            value: 'aXBjZGF0YTA2NDA2NDc1OQ==',
-            epoch: 1567760776,
-            generation: 0
-          }]
-        }
-      };
-      const res = protocol.fromEncodedMessageFile(req);
-      res.in.data.map(d => {
-        expect(d.value).toEqual(value);
+    test('with', () => {
+      fs.readFileSync.mockReturnValue(dataValue);
+
+      const res = protocol.fromEncodedMessageFile(withReq());
+      res.with.data.map((d) => {
+        expect(d.value).toEqual(dataValue);
       });
     });
 
     test('get', () => {
-      const NOT_KERASH = 'rstid:not_kerash:01DKYADEK8YVR3Y8011BVW5Z0T';
-      const a = uuid();
-      const b = uuid();
-      const value = [{
-        a,
-        b
-      }];
+      fs.readFileSync.mockReturnValue(dataValue);
 
-      fs.readFileSync.mockReturnValue(value);
-
-      const body = {
-        get: {
-          bucket: 'api_scan',
-          data: [{
-            key: NOT_KERASH,
-            value,
-            epoch: 1567606880,
-            generation: 0
-          }]
-        }
-      };
-      const req = {
-        statusCode: 200,
-        header: [{
-          key: 'Content-Type',
-          value: ['application/json']
-        }],
-        body
-      };
-      const res = protocol.fromEncodedMessageFile(req);
-      res.body.get.data.map(d => {
-        expect(d.value).toEqual(value);
+      const res = protocol.fromEncodedMessageFile(getReq());
+      res.get.map((g) => {
+        g.data.map((d) => {
+          expect(d.value).toEqual(dataValue);
+        });
       });
     });
   });
 
   describe('fromEncodedMessage func', () => {
-    test('in, with', () => {
-      const NOT_KERASH = 'rstid:not_kerash:01DKYADEK8YVR3Y8011BVW5Z0T';
-      const a = uuid();
-      const b = uuid();
-      const value = [{
-        a,
-        b
-      }];
-      const data = JSON.stringify([{
-        key: NOT_KERASH,
-        value,
-        epoch: 1567760776,
-        generation: 0
-      }]).toString('base64');
-      const req = {
-        in: {
-          bucket: 'api_scan',
-          data
-        }
-      };
-      const res = protocol.fromEncodedMessage(req);
-      JSON.parse(res.in.data).map(d => {
-        expect(d.value).toEqual(value);
+    test('in', () => {
+      const res = protocol.fromEncodedMessage(inReq());
+      res.in.data.map((d) => {
+        expect(d.value.toString()).toEqual(Buffer.from(fileName, 'base64').toString());
+      });
+    });
+
+    test('with', () => {
+      const res = protocol.fromEncodedMessage(withReq());
+      res.with.data.map((d) => {
+        expect(d.value.toString()).toEqual(Buffer.from(fileName, 'base64').toString());
       });
     });
 
     test('get', () => {
-      const NOT_KERASH = 'rstid:not_kerash:01DKYADEK8YVR3Y8011BVW5Z0T';
-      const a = uuid();
-      const b = uuid();
-      const value = [{
-        a,
-        b
-      }];
-
-      const data = JSON.stringify([{
-        key: NOT_KERASH,
-        value,
-        epoch: 1567760776,
-        generation: 0
-      }]).toString('base64');
-
-      const body = {
-        get: {
-          bucket: 'api_scan',
-          data
-        }
-      };
-      const req = {
-        statusCode: 200,
-        header: [{
-          key: 'Content-Type',
-          value: ['application/json']
-        }],
-        body
-      };
-      const res = protocol.fromEncodedMessage(req);
-      JSON.parse(res.body.get.data).map(d => {
-        expect(d.value).toEqual(value);
+      const res = protocol.fromEncodedMessage(getReq());
+      res.get.map((g) => {
+        g.data.map((d) => {
+          expect(d.value.toString()).toEqual(Buffer.from(fileName, 'base64').toString());
+        });
       });
     });
   });
@@ -227,12 +228,21 @@ describe('protocol', () => {
     const a = uuid();
     const b = uuid();
     const data = { a, b };
-    const value = [[{
-      value: {
-        body: Buffer.from(JSON.stringify(data)).toString('base64')
-      }
-    }]];
-    const res = protocol.toEncodedCapnpMessage(value, diff, decodeTime, nodeTime);
+    const value = [
+      [
+        {
+          value: {
+            body: Buffer.from(JSON.stringify(data)).toString('base64'),
+          },
+        },
+      ],
+    ];
+    const res = protocol.toEncodedCapnpMessage(
+      value,
+      diff,
+      decodeTime,
+      nodeTime
+    );
     const json = JSON.parse(res);
 
     expect(json).toHaveProperty('out');
@@ -253,10 +263,12 @@ describe('protocol', () => {
     const diff = process.hrtime(start);
     const a = uuid();
     const b = uuid();
-    const value = [{
-      a,
-      b
-    }];
+    const value = [
+      {
+        a,
+        b,
+      },
+    ];
     const res = protocol.toEncodedMessage(value, diff, decodeTime, nodeTime);
     const json = JSON.parse(res);
 

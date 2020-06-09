@@ -35,9 +35,9 @@ const encodeCapnProto = (d) => {
 }
 
 module.exports = {
-  rpcSchema: rpcSchema,
-  b64Decode: b64Decode,
-  b64Encode: b64Encode,
-  decodeCapnProto: decodeCapnProto,
-  encodeCapnProto: encodeCapnProto
+  rpcSchema,
+  b64Decode,
+  b64Encode,
+  decodeCapnProto,
+  encodeCapnProto,
 };

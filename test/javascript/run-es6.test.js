@@ -112,12 +112,12 @@ describe('run es6', () => {
     // Setting schema version 2
     process.env.SIFT_JSON = 'sift-schema2.json';
     const run = require('../../root/usr/bin/redsift/run-es6.js');
-    test('detect isApiRpc', () => {
+    test('detect isApiRpcOutput', () => {
       const bucketName = 'api_scan';
       const nodeOutputs = run.findBucketNodes(bucketName);
       const rpcBucketNames = run.getRpcBucketNamesFromSift();
-      const isApiRpc = run.detectNodeRpcOutput(nodeOutputs, rpcBucketNames);
-      expect(isApiRpc).toEqual(true);
+      const isApiRpcOutput = run.detectNodeRpcOutput(nodeOutputs, rpcBucketNames);
+      expect(isApiRpcOutput).toEqual(true);
     });
   });
 });

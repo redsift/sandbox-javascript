@@ -82,5 +82,5 @@ final.then(function () {
 });
 
 module.exports = {
-  final
+  final,
 }
