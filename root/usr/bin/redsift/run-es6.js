@@ -104,9 +104,9 @@ nodes.forEach(function (i) {
     const isApiRpc = detectNodeRpcOutput(nodeOutputs, rpcBucketNames);
     const isCapnProto = detectCapnProtocol(req);
 
-    if (isSchema2 && isApiRpc) {
+    if (isSchema2) {
       //console.debug(`Schema version 2 and _rpc output detected for bucket: ${req.in.bucket}`);
-      if (isCapnProto) {
+      if (isCapnProto && isApiRpc) {
         //console.debug(`Cap'n Proto Schema detected for bucket: ${req.in.bucket}`);
         req = protocol.fromEncodedCapnpMessage(req);
       } else {
