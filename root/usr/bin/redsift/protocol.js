@@ -19,22 +19,25 @@ function flattenNestedArrays(value) {
   return [value];
 }
 
+function getFileContent(d) {
+  const fileName = Buffer.from(d.value, 'base64').toString();
+  return readFileContent(fileName);
+}
+
 function fromEncodedCapnpMessage(body) {
   ['in', 'with'].forEach(function (k) {
     if (k in body) {
       body[k].data.forEach(d => {
-        const fileName = Buffer.from(d.value, 'base64').toString();
-        const fileContent = readFileContent(fileName);
-        d.value = convert.decodeCapnProto(fileContent);
+        d.value = convert.decodeCapnProto(getFileContent(d));
       });
     }
   });
 
   if ('get' in body) {
     body.get.forEach(function (g) {
-      const fileName = Buffer.from(g.value, 'base64').toString();
-      const fileContent = readFileContent(fileName);
-      g = convert.decodeCapnProto(fileContent);
+      g.data.forEach(d => {
+        d.value = convert.decodeCapnProto(getFileContent(d));
+      });
     });
   }
 
@@ -45,18 +48,16 @@ function fromEncodedMessageFile(body) {
   ['in', 'with'].forEach(function (k) {
     if (k in body) {
       body[k].data.forEach(d => {
-        const fileName = Buffer.from(d.value, 'base64').toString();
-        const fileContent = readFileContent(fileName);
-        d.value = fileContent;
+        d.value = getFileContent(d);
       });
     }
   });
 
   if ('get' in body) {
     body.get.forEach(function (g) {
-      const fileName = Buffer.from(g.value, 'base64').toString();
-      const fileContent = readFileContent(fileName);
-      g = fileContent;
+      g.data.forEach(d => {
+        d.value = getFileContent(d);
+      });
     });
   }
 
