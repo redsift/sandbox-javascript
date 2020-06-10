@@ -23,7 +23,7 @@
     "jest": "26.0.1",
     "jest-cli": "26.0.1",
     "jest-junit": "10.0.0",
-    "nanomsg": "4.1.0",
+    "nanomsg": "^4.1.0",
     "uuid": "8.1.0"
   },
   "jest": {

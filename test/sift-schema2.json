@@ -18,18 +18,27 @@
         "#": "Missing Node",
         "implementation": {
           "javascript": "node-missing.js"
+        },
+        "outputs": {
+          "api_rpc": {}
         }
       },
       {
         "#": "Test Node 2",
         "implementation": {
           "javascript": "server-alt/node2.js"
+        },
+        "outputs": {
+          "api_rpc": {}
         }
       },
       {
         "#": "Test Node 3",
         "implementation": {
           "javascript": "server-plain/node3.js"
+        },
+        "outputs": {
+          "api_rpc": {}
         }
       }
     ],

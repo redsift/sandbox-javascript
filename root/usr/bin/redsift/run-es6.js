@@ -12,18 +12,20 @@ const init = require('./init.js');
 const nodes = init.nodes;
 const SIFT_SCHEMA_VERSION_2 = 2;
 const KERASH_KEY = 'rstid:kerash';
-const RPC_KEY = '_rpc'
+const RPC_KEY = '_rpc';
 const SIFT_ROOT = init.SIFT_ROOT;
 const IPC_ROOT = init.IPC_ROOT;
 const DRY = init.DRY;
 const sift = init.sift;
 const isSchema2 = sift['schema-version'] === SIFT_SCHEMA_VERSION_2;
 
-// Detects Capn'Proto Protocol based on KERASH_KEY identifer 
+// Detects Capn'Proto Protocol based on KERASH_KEY identifer
 const detectCapnProtocol = (req) => {
   if (isSchema2 && req.in.data) {
     try {
-      return req.in.data.filter((d) => d.key.startsWith(KERASH_KEY)).length ? true : false;
+      return req.in.data.filter((d) => d.key.startsWith(KERASH_KEY)).length
+        ? true
+        : false;
     } catch (e) {
       console.error(e);
       return false;
@@ -36,7 +38,7 @@ const detectCapnProtocol = (req) => {
 const getRpcBucketNamesFromSift = () => {
   const bucketNames = {};
   if (sift.dag && sift.dag.outputs) {
-    Object.keys(sift.dag.outputs.exports || {}).forEach(key => {
+    Object.keys(sift.dag.outputs.exports || {}).forEach((key) => {
       if (sift.dag.outputs.exports[key].import == RPC_KEY) {
         bucketNames[key] = true; // Add the bucket name if _rpc
       }
@@ -50,7 +52,7 @@ const rpcBucketNames = getRpcBucketNamesFromSift();
 // Does the rpc outputs match the bucket name for the node?
 const detectNodeRpcOutput = (nodeOutputs, rpcBucketNames) => {
   let matched = false;
-  Object.keys(nodeOutputs).forEach(key => {
+  Object.keys(nodeOutputs).forEach((key) => {
     if (rpcBucketNames[key]) {
       matched = true;
     }
@@ -64,9 +66,11 @@ let hasImplementations = false;
 nodes.forEach(function (i) {
   const n = sift.dag.nodes[i];
 
-  if (n === undefined ||
+  if (
+    n === undefined ||
     n.implementation === undefined ||
-    (n.implementation.javascript === undefined)) {
+    n.implementation.javascript === undefined
+  ) {
     throw new Error('implementation not supported by run at node #' + i);
   }
 
@@ -80,21 +84,19 @@ nodes.forEach(function (i) {
     nodeErr = err;
   }
 
-  if (DRY) { // Dry run, for testing or warming compiler
+  if (DRY) {
+    // Dry run, for testing or warming compiler
     console.log('Detected Dry run');
     return;
   }
-
   const reply = Nano.socket('rep');
   reply.rcvmaxsize(-1);
   reply.connect('ipc://' + path.join(IPC_ROOT, i + '.sock'));
   reply.on('data', function (msg) {
     const start = process.hrtime();
     let req = JSON.parse(msg);
-
     const isApiRpcOutput = detectNodeRpcOutput(n.outputs, rpcBucketNames);
     const isCapnProtoInput = detectCapnProtocol(req);
-
     if (isSchema2) {
       //console.debug(`Schema version 2 and _rpc output detected for bucket: ${req.in.bucket}`);
       if (isCapnProtoInput) {
@@ -123,7 +125,7 @@ nodes.forEach(function (i) {
         message: computeErr.message,
         stack: computeErr.stack,
         fileName: computeErr.fileName,
-        lineNumber: computeErr.lineNumber
+        lineNumber: computeErr.lineNumber,
       };
       reply.send(JSON.stringify({ error: err }));
       return;
@@ -140,11 +142,14 @@ nodes.forEach(function (i) {
         const nodeTime = process.hrtime(startNode);
         const diff = process.hrtime(start);
         if (isSchema2 && isApiRpcOutput) {
-          reply.send(protocol.toEncodedCapnpMessage(value, diff, decodeTime, nodeTime));
+          reply.send(
+            protocol.toEncodedCapnpMessage(value, diff, decodeTime, nodeTime)
+          );
         } else {
-          reply.send(protocol.toEncodedMessage(value, diff, decodeTime, nodeTime));
+          reply.send(
+            protocol.toEncodedMessage(value, diff, decodeTime, nodeTime)
+          );
         }
-
       })
       .catch(function (error) {
         console.error(error.stack);
@@ -152,7 +157,7 @@ nodes.forEach(function (i) {
           message: error.message,
           stack: error.stack,
           fileName: error.fileName,
-          lineNumber: error.lineNumber
+          lineNumber: error.lineNumber,
         };
         const diff = process.hrtime(start);
         reply.send(JSON.stringify({ error: err, stats: { result: diff } }));
@@ -168,5 +173,5 @@ if (!hasImplementations) {
 module.exports = {
   detectCapnProtocol,
   getRpcBucketNamesFromSift,
-  detectNodeRpcOutput
-}
+  detectNodeRpcOutput,
+};

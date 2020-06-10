@@ -1,30 +1,49 @@
 {
   "dag": {
-    "nodes":[
-		{
-			"#": "Test Node 1",
-			"implementation": {
-				"javascript": "server/node1.js"  
-			}
-		},
-		{
-			"#": "Missing Node",
-			"implementation": {
-				"javascript": "node-missing.js"  
-			}
-		},
-		{
-			"#": "Test Node 2",
-			"implementation": {
-				"javascript": "server-alt/node2.js"  
-			}
-		},
-		{
-			"#": "Test Node 3",
-			"implementation": {
-				"javascript": "server-plain/node3.js"
-			}
-		}			
-	]
+    "nodes": [
+      {
+        "#": "Test Node 1",
+        "implementation": {
+          "javascript": "server/node1.js"
+        },
+        "outputs": {
+          "api_rpc": {}
+        }
+      },
+      {
+        "#": "Missing Node",
+        "implementation": {
+          "javascript": "node-missing.js"
+        },
+        "outputs": {
+          "api_rpc": {}
+        }
+      },
+      {
+        "#": "Test Node 2",
+        "implementation": {
+          "javascript": "server-alt/node2.js"
+        },
+        "outputs": {
+          "api_rpc": {}
+        }
+      },
+      {
+        "#": "Test Node 3",
+        "implementation": {
+          "javascript": "server-plain/node3.js"
+        },
+        "outputs": {
+          "api_rpc": {}
+        }
+      }
+    ],
+    "outputs": {
+      "exports": {
+        "api_rpc": {
+          "import": "_rpc"
+        }
+      }
+    }
   }
 }
