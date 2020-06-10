@@ -79,6 +79,17 @@ describe('protocol', () => {
     };
   };
 
+  describe('flattenNestedArrays func', () => {
+    test('nested array', () => {
+      const result = protocol.flattenNestedArrays([['a']]);
+      expect(result).toEqual(['a']);
+    });
+    test('no array', () => {
+      const result = protocol.flattenNestedArrays('a');
+      expect(result).toEqual(['a']);
+    });
+  });
+
   describe('fromEncodedCapnpMessage func', () => {
     test('in', () => {
       const KERASH_KEY = 'rstid:kerash:01DKYADEK8YVR3Y8011BVW5Z0T';
@@ -198,14 +209,18 @@ describe('protocol', () => {
     test('in', () => {
       const res = protocol.fromEncodedMessage(inReq());
       res.in.data.map((d) => {
-        expect(d.value.toString()).toEqual(Buffer.from(fileName, 'base64').toString());
+        expect(d.value.toString()).toEqual(
+          Buffer.from(fileName, 'base64').toString()
+        );
       });
     });
 
     test('with', () => {
       const res = protocol.fromEncodedMessage(withReq());
       res.with.data.map((d) => {
-        expect(d.value.toString()).toEqual(Buffer.from(fileName, 'base64').toString());
+        expect(d.value.toString()).toEqual(
+          Buffer.from(fileName, 'base64').toString()
+        );
       });
     });
 
@@ -213,7 +228,9 @@ describe('protocol', () => {
       const res = protocol.fromEncodedMessage(getReq());
       res.get.map((g) => {
         g.data.map((d) => {
-          expect(d.value.toString()).toEqual(Buffer.from(fileName, 'base64').toString());
+          expect(d.value.toString()).toEqual(
+            Buffer.from(fileName, 'base64').toString()
+          );
         });
       });
     });

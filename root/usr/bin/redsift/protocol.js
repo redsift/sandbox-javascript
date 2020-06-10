@@ -126,4 +126,5 @@ module.exports = {
   fromEncodedMessage,
   toEncodedCapnpMessage,
   toEncodedMessage,
+  flattenNestedArrays,
 };
