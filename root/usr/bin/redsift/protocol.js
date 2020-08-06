@@ -85,8 +85,12 @@ function toEncodedCapnpMessage(value, diff, decodeTime, nodeTime) {
   const startEncode = process.hrtime();
   const flat = flattenNestedArrays(value);
   flat.forEach(function (i) {
-    i.value.body = Buffer.from(i.value.body, 'base64');
-    i.value = convert.encodeCapnProto(i.value).toString('base64');
+    if (i.value.body) {
+      i.value.body = Buffer.from(i.value.body, 'base64');
+      i.value = convert.encodeCapnProto(i.value).toString('base64');
+    } else {
+      i = convert.b64Encode(i);
+    }
   });
   const encodeTime = process.hrtime(startEncode);
   return JSON.stringify({
