@@ -22,7 +22,7 @@ commands:
     parameters:
       nv:
         type: string
-        default: "12.18.0"
+        default: '12.18.4'
       islatest:
         type: boolean
         default: false
@@ -41,15 +41,14 @@ jobs:
     executor: dockexec
     steps:
       - v_build:
-          nv: "10.17.0"
+          nv: '10.22.1'
 
   build_v12:
     executor: dockexec
     steps:
       - v_build:
-          nv: "12.18.0"
+          nv: '12.18.4'
           islatest: true
-
 
   build_placeholder:
     executor: dockexec
