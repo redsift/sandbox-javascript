@@ -3,7 +3,6 @@ version: 2.1
 default:
   environment: &envvars
     CONTAINER_NAME: quay.io/redsift/sandbox-javascript
-    CIRCLE_REVERSE_DEPENDENCIES: sandbox-dmarc-insights
 executors:
   dockexec:
     shell: /bin/bash
@@ -49,21 +48,12 @@ jobs:
     steps:
       - run: echo "Create a job for each extra version with the command defined above"
 
-  trigger-builds:
-    executor: baseexec
-    steps:
-      - checkout
-      - run: ./circle/trigger_build
-
 workflows:
   version: 2.1
   build-and-deploy:
     jobs:
       - build_v12:
           context: org-global
-      - trigger-builds:
-          requires:
-            - build_v12
           filters:
             branches:
               only:
