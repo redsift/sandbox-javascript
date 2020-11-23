@@ -22,7 +22,7 @@ commands:
     parameters:
       nv:
         type: string
-        default: '12.18.4'
+        default: '12.19.1'
       islatest:
         type: boolean
         default: false
@@ -37,17 +37,11 @@ commands:
           command: docker push $CONTAINER_NAME
 
 jobs:
-  build_v10:
-    executor: dockexec
-    steps:
-      - v_build:
-          nv: '10.22.1'
-
   build_v12:
     executor: dockexec
     steps:
       - v_build:
-          nv: '12.18.4'
+          nv: '12.19.1'
           islatest: true
 
   build_placeholder:
@@ -65,13 +59,10 @@ workflows:
   version: 2.1
   build-and-deploy:
     jobs:
-      - build_v10:
-          context: org-global
       - build_v12:
           context: org-global
       - trigger-builds:
           requires:
-            - build_v10
             - build_v12
           filters:
             branches:
