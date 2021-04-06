@@ -5,13 +5,13 @@ LABEL author.name="Karl Norling" \
   organization="Red Sift"
 
 # nodev specifies node version
-ARG nodev=12.21.0
+ARG nodev=12.22.1
 LABEL io.redsift.sandbox.install="/usr/bin/redsift/install.js" io.redsift.sandbox.run="/usr/bin/redsift/run.js"
 
 ENV NVM_VERSION 0.37.2
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_VERSION=${nodev}
-ENV NPM_VERSION=6.14.11
+ENV NPM_VERSION=6.14.12
 
 # Install a minimal git + python + build tools as npm and node-gyp often needs it for modules
 RUN export DEBIAN_FRONTEND=noninteractive && \
