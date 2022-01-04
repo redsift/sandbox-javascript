@@ -20,17 +20,6 @@ function getFileContent(d) {
   );
 }
 
-  if ('get' in body) {
-    body.get.forEach(function (g) {
-      g.data.forEach((d) => {
-        d.value = getFileContent(d);
-      });
-    });
-  }
-
-  return body;
-}
-
 function fromEncodedMessageFile(body) {
   ['in', 'with'].forEach(function (k) {
     if (k in body) {
