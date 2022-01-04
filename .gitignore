@@ -17,6 +17,5 @@ test/*/package-lock.json
 root/usr/bin/redsift/.npmrc
 root/home/sandbox/.npmrc
 
-node-capnp
 Dockerfile.testing
 root/usr/bin/redsift/package-lock.json
