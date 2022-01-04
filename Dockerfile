@@ -44,7 +44,7 @@ COPY root /
 RUN cd /usr/bin/redsift && \
   npm install --unsafe-perm && \ 
   npm test && \
-  npm run es6 && rm -Rf node_modules/\@babel/* node_modules/jshint
+  npm run es6 && rm -Rf node_modules/jshint
 
 
 RUN chown -R sandbox:sandbox $HOME
