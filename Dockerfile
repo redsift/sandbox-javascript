@@ -43,7 +43,6 @@ COPY root /
 # Install any required NPM modules (unsafe-perm: to allow for cloning)
 RUN cd /usr/bin/redsift && \
   npm install --unsafe-perm && \ 
-  npm test && \
   npm run es6 && rm -Rf node_modules/jshint
 
 
