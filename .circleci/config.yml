@@ -54,8 +54,3 @@ workflows:
     jobs:
       - build_v12:
           context: org-global
-          filters:
-            branches:
-              only:
-                - master
-                - release-1
