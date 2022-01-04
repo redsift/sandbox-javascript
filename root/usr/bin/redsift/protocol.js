@@ -20,20 +20,6 @@ function getFileContent(d) {
   );
 }
 
-function fromEncodedCapnpMessage(body) {
-  ['in', 'with'].forEach(function (k) {
-    if (k in body) {
-      body[k].data.forEach((d) => {
-        const fc = getFileContent(d);
-        if (k === 'in') {
-          d.value = convert.decodeCapnProto(fc);
-        } else {
-          d.value = fc;
-        }
-      });
-    }
-  });
-
   if ('get' in body) {
     body.get.forEach(function (g) {
       g.data.forEach((d) => {
@@ -81,29 +67,6 @@ function fromEncodedMessage(body) {
   return body;
 }
 
-function toEncodedCapnpMessage(value, diff, decodeTime, nodeTime) {
-  const startEncode = process.hrtime();
-  const flat = flattenNestedArrays(value);
-  flat.forEach(function (i) {
-    if (i.value.body) {
-      i.value.body = Buffer.from(i.value.body, 'base64');
-      i.value = convert.encodeCapnProto(i.value).toString('base64');
-    } else {
-      i = convert.b64Encode(i);
-    }
-  });
-  const encodeTime = process.hrtime(startEncode);
-  return JSON.stringify({
-    out: flat,
-    stats: {
-      result: diff,
-      decode: decodeTime,
-      node: nodeTime,
-      encode: encodeTime,
-    },
-  });
-}
-
 function toEncodedMessage(value, diff, decodeTime, nodeTime) {
   const startEncode = process.hrtime();
   // if node() returns a Promise.all([...]), remove the nesting
@@ -125,10 +88,8 @@ function toEncodedMessage(value, diff, decodeTime, nodeTime) {
 }
 
 module.exports = {
-  fromEncodedCapnpMessage,
   fromEncodedMessageFile,
   fromEncodedMessage,
-  toEncodedCapnpMessage,
   toEncodedMessage,
   flattenNestedArrays,
 };

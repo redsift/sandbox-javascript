@@ -16,7 +16,7 @@ ENV NPM_VERSION=6.14.15
 # Install a minimal git + python + build tools as npm and node-gyp often needs it for modules
 RUN export DEBIAN_FRONTEND=noninteractive && \
   apt-get update && \
-  apt-get install -y build-essential git libcapnp-dev capnproto dnsutils \
+  apt-get install -y build-essential git dnsutils \
   libpython-stdlib libpython2.7-minimal libpython2.7-stdlib mime-support python python-minimal python2.7 python2.7-minimal python-pip && \
   apt-get purge -y && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 

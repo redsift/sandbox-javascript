@@ -19,7 +19,6 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "capnp": "file:node-capnp",
     "jest": "26.0.1",
     "jest-cli": "26.0.1",
     "jest-junit": "10.0.0",

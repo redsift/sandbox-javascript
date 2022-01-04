@@ -9,4 +9,4 @@ COPY package.json /tmp
 COPY package-lock.json /tmp
 COPY jsconfig.json /tmp
 
-RUN cd /tmp && cp -r /usr/bin/redsift/node-capnp . && npm ci
+RUN cd /tmp && npm ci

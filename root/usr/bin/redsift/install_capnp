@@ -1,7 +1,0 @@
-#!/bin/bash
-set -eu
-
-echo "Installing node-capnp..."
-
-rm -rf ./node-capnp
-git clone https://github.com/capnproto/node-capnp.git

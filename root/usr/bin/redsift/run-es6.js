@@ -11,28 +11,12 @@ const protocol = require('./protocol.js');
 const init = require('./init.js');
 const nodes = init.nodes;
 const SIFT_SCHEMA_VERSION_2 = 2;
-const KERASH_KEY = 'rstid:kerash';
 const RPC_KEY = '_rpc';
 const SIFT_ROOT = init.SIFT_ROOT;
 const IPC_ROOT = init.IPC_ROOT;
 const DRY = init.DRY;
 const sift = init.sift;
 const isSchema2 = sift['schema-version'] === SIFT_SCHEMA_VERSION_2;
-
-// Detects Capn'Proto Protocol based on KERASH_KEY identifer
-const detectCapnProtocol = (req) => {
-  if (isSchema2 && req.in.data) {
-    try {
-      return req.in.data.filter((d) => d.key.startsWith(KERASH_KEY)).length
-        ? true
-        : false;
-    } catch (e) {
-      console.error(e);
-      return false;
-    }
-  }
-  return false;
-};
 
 // Do we have _rpc outputs defined for the sift?
 const getRpcBucketNamesFromSift = () => {
@@ -96,15 +80,9 @@ nodes.forEach(function (i) {
     const start = process.hrtime();
     let req = JSON.parse(msg);
     const isApiRpcOutput = detectNodeRpcOutput(n.outputs, rpcBucketNames);
-    const isCapnProtoInput = detectCapnProtocol(req);
     if (isSchema2) {
       //console.debug(`Schema version 2 and _rpc output detected for bucket: ${req.in.bucket}`);
-      if (isCapnProtoInput) {
-        //console.debug(`Cap'n Proto Schema detected for bucket: ${req.in.bucket}`);
-        req = protocol.fromEncodedCapnpMessage(req);
-      } else {
-        req = protocol.fromEncodedMessageFile(req);
-      }
+      req = protocol.fromEncodedMessageFile(req);
     } else {
       //console.debug(`Schema version 1 for for bucket: ${req.in.bucket}`);
       req = protocol.fromEncodedMessage(JSON.parse(msg));
@@ -141,15 +119,9 @@ nodes.forEach(function (i) {
         //console.log('REP-VALUE:', value);
         const nodeTime = process.hrtime(startNode);
         const diff = process.hrtime(start);
-        if (isSchema2 && isApiRpcOutput) {
-          reply.send(
-            protocol.toEncodedCapnpMessage(value, diff, decodeTime, nodeTime)
-          );
-        } else {
-          reply.send(
-            protocol.toEncodedMessage(value, diff, decodeTime, nodeTime)
-          );
-        }
+        reply.send(
+          protocol.toEncodedMessage(value, diff, decodeTime, nodeTime)
+        );
       })
       .catch(function (error) {
         console.error(error.stack);
@@ -171,7 +143,6 @@ if (!hasImplementations) {
 
 // For testing mainly
 module.exports = {
-  detectCapnProtocol,
   getRpcBucketNamesFromSift,
   detectNodeRpcOutput,
 };
