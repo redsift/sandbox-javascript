@@ -18,4 +18,3 @@ root/usr/bin/redsift/.npmrc
 root/home/sandbox/.npmrc
 
 Dockerfile.testing
-root/usr/bin/redsift/package-lock.json

@@ -26,7 +26,7 @@ Parameters are the node numbers you wish the script to install or execute.
 
 
 # Running tests
- - `npm install`
+ - `npm ci`
  - `npm test`
 
 # Build docker
