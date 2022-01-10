@@ -3,6 +3,7 @@ set -eu
 
 NV=$1
 IS_LATEST=${2:-}
+EDITION="-v1"
 
 CIRCLE_BRANCH=${CIRCLE_BRANCH/\//-} # fix/sth => fix-sth
 tagName=(${CIRCLE_BRANCH/-/ }) # release-1 => release
@@ -13,7 +14,7 @@ if [ $tagName == "release" ]; then
   parentVersion="latest"
 fi
 
-imageName=$CONTAINER_NAME:v$NV$SUFFIX
+imageName=$CONTAINER_NAME:v$NV$EDITION$SUFFIX
 
 echo "Configuring FROM in Dockerfile with base=sandbox:${parentVersion}"
 sed "s/^\(FROM quay.io\/redsift\/sandbox:\).*$/\1${parentVersion}/" < Dockerfile > Dockerfile.versioned
