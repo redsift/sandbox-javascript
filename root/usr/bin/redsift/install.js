@@ -59,13 +59,13 @@ const final = Object.keys(map).reduce(function (last, pathToInstall) {
   }
 
   return last.then(function () {
-    console.log('Performing npm install in', pathToInstall);
+    console.log('Performing npm ci in', pathToInstall);
 
     return new Promise(function (resolve, reject) {
-      child.exec('npm install', { cwd: pathToInstall, maxBuffer: MAX_STDERR_BUFFER }, function (err, stdout, stderr) {
+      child.exec('npm ci', { cwd: pathToInstall, maxBuffer: MAX_STDERR_BUFFER }, function (err, stdout, stderr) {
         if (err) {
           console.error(stderr);
-          reject('npm installed failed in ' + pathToInstall + ' exit code:' + err.code);
+          reject('npm ci failed in ' + pathToInstall + ' exit code:' + err.code);
           return;
         }
         resolve();

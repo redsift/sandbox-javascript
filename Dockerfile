@@ -41,8 +41,9 @@ RUN \
 COPY root /
 
 # Install any required NPM modules (unsafe-perm: to allow for cloning)
+# npm ci is faster than npm install, but requires lock file
 RUN cd /usr/bin/redsift && \
-  npm install --unsafe-perm && \ 
+  npm ci --unsafe-perm && \ 
   npm run es6 && rm -Rf node_modules/jshint
 
 
