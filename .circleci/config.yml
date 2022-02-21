@@ -21,7 +21,7 @@ commands:
     parameters:
       nv:
         type: string
-        default: '12.22.8'
+        default: '16.14.0'
       islatest:
         type: boolean
         default: false
@@ -40,7 +40,19 @@ jobs:
     executor: dockexec
     steps:
       - v_build:
-          nv: '12.22.8'
+          nv: '12.22.10'
+          islatest: false
+  build_v14:
+    executor: dockexec
+    steps:
+      - v_build:
+          nv: '14.19.0'
+          islatest: false
+  build_v16:
+    executor: dockexec
+    steps:
+      - v_build:
+          nv: '16.14.0'
           islatest: true
 
   build_placeholder:
@@ -53,4 +65,8 @@ workflows:
   build-and-deploy:
     jobs:
       - build_v12:
+          context: org-global
+      - build_v14:
+          context: org-global
+      - build_v16:
           context: org-global
