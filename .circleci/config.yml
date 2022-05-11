@@ -58,8 +58,6 @@ workflows:
   version: 2.1
   build-and-deploy:
     jobs:
-      - build_v12:
-          context: org-global
       - build_v14:
           context: org-global
       - build_v16:
