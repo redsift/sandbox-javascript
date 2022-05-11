@@ -8,7 +8,7 @@
     "test": "npm test"
   },
   "dependencies": {
-    "nanomsg": "4.1.0"
+    "nanomsg": "^4.2.0"
   },
   "devDependencies": {
     "jshint": "latest"
