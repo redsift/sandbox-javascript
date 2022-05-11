@@ -5,7 +5,7 @@ LABEL author.name="Karl Norling" \
   organization="Red Sift"
 
 # nodev specifies node version
-ARG nodev=16.14.0
+ARG nodev=16.15.0
 LABEL io.redsift.sandbox.install="/usr/bin/redsift/install.js" io.redsift.sandbox.run="/usr/bin/redsift/run.js"
 
 ENV NVM_VERSION 0.37.2

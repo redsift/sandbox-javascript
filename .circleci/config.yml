@@ -21,7 +21,7 @@ commands:
     parameters:
       nv:
         type: string
-        default: '16.14.0'
+        default: '16.15.0'
       islatest:
         type: boolean
         default: false
@@ -36,12 +36,6 @@ commands:
           command: docker push $CONTAINER_NAME
 
 jobs:
-  build_v12:
-    executor: dockexec
-    steps:
-      - v_build:
-          nv: '12.22.10'
-          islatest: false
   build_v14:
     executor: dockexec
     steps:
@@ -52,7 +46,7 @@ jobs:
     executor: dockexec
     steps:
       - v_build:
-          nv: '16.14.0'
+          nv: '16.15.0'
           islatest: true
 
   build_placeholder:
