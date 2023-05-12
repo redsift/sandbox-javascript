@@ -74,7 +74,6 @@ let hasImplementations = false;
             // For some reason, using "export default" with ESBuild requires this.
             node = node.default;
           } else {
-            console.log(typeof node.default);
             throw new Error(
               'Failed to import node. Trying to require node instead.'
             );
