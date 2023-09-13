@@ -40,7 +40,7 @@ RUN \
 # Copy support files across
 COPY root /
 
-RUN chmod -R +wr /home/sandbox/.npm
+RUN chown -R sandbox:sandbox /home/sandbox/.npm
 
 
 # Install any required NPM modules (unsafe-perm: to allow for cloning)
