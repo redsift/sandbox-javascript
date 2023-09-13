@@ -1,6 +1,8 @@
 FROM quay.io/redsift/sandbox-javascript:latest
 MAINTAINER Christos Vontas email: christos@redsift.io version: 1.0.1
 
+USER sandbox
+
 COPY --chown=7438:7438 test /run/sandbox/sift
 
 COPY root /tmp/root
