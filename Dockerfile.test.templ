@@ -1,7 +1,6 @@
 FROM quay.io/redsift/sandbox-javascript:latest
 MAINTAINER Christos Vontas email: christos@redsift.io version: 1.0.1
 
-USER sandbox
 
 COPY --chown=7438:7438 test /run/sandbox/sift
 
@@ -11,5 +10,8 @@ COPY package.json /tmp
 COPY package-lock.json /tmp
 COPY jsconfig.json /tmp
 
-RUN chmod -R +wr /home/sandbox/.npm
+RUN chmod -R a+rw /tmp
+
+USER sandbox
+
 RUN cd /tmp && npm ci --unsafe-perm
