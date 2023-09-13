@@ -1,23 +1,23 @@
-FROM quay.io/redsift/sandbox:18.04-beta
+FROM quay.io/redsift/sandbox:22.04-beta
 LABEL author.name="Karl Norling" \
   author.email="karl.norling@redsift.io" \
   version="1.1.102" \
   organization="Red Sift"
 
 # nodev specifies node version
-ARG nodev=16.15.0
+ARG nodev=18.17.1
 LABEL io.redsift.sandbox.install="/usr/bin/redsift/install.js" io.redsift.sandbox.run="/usr/bin/redsift/run.js"
 
-ENV NVM_VERSION 0.37.2
+ENV NVM_VERSION 0.39.5
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_VERSION=${nodev}
-ENV NPM_VERSION=6.14.15
+ENV NPM_VERSION=9.6.7
 
 # Install a minimal git + python + build tools as npm and node-gyp often needs it for modules
 RUN export DEBIAN_FRONTEND=noninteractive && \
   apt-get update && \
   apt-get install -y build-essential git dnsutils \
-  libpython-stdlib libpython2.7-minimal libpython2.7-stdlib mime-support python python-minimal python2.7 python2.7-minimal python-pip && \
+  libpython3-stdlib mime-support python3-minimal python3 python3-pip && \
   apt-get purge -y && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install nvm with node and npm
