@@ -9,4 +9,5 @@ COPY package.json /tmp
 COPY package-lock.json /tmp
 COPY jsconfig.json /tmp
 
+RUN chmod -R +wr /home/sandbox/.npm
 RUN cd /tmp && npm ci --unsafe-perm
