@@ -40,6 +40,9 @@ RUN \
 # Copy support files across
 COPY root /
 
+RUN chmod -R +wr /home/sandbox/.npm
+
+
 # Install any required NPM modules (unsafe-perm: to allow for cloning)
 # npm ci is faster than npm install, but requires lock file
 RUN cd /usr/bin/redsift && \
