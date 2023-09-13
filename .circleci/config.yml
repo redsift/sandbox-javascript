@@ -21,7 +21,7 @@ commands:
     parameters:
       nv:
         type: string
-        default: '16.15.0'
+        default: '18.17.1'
       islatest:
         type: boolean
         default: false

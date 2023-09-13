@@ -11,7 +11,6 @@ LABEL io.redsift.sandbox.install="/usr/bin/redsift/install.js" io.redsift.sandbo
 ENV NVM_VERSION 0.39.5
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_VERSION=${nodev}
-ENV NPM_VERSION=9.6.7
 
 # Install a minimal git + python + build tools as npm and node-gyp often needs it for modules
 RUN export DEBIAN_FRONTEND=noninteractive && \
@@ -26,7 +25,6 @@ RUN mkdir -p $NVM_DIR && curl https://raw.githubusercontent.com/creationix/nvm/v
   && nvm install $NODE_VERSION \
   && nvm alias default $NODE_VERSION \
   && nvm use default \
-  && npm i -g npm@${NPM_VERSION} \
   && npm_config_user=root
 
 ENV NODE_PATH $NVM_DIR/versions/node/v$NODE_VERSION/lib/node_modules
